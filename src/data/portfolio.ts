@@ -44,7 +44,7 @@ export const projects: Project[] = [
     tags: ['C++17', 'ONNX Runtime', 'MiDaS', 'Computer Vision'],
     status: 'completed',
     year: '2025',
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/Aaryan-Degama/LilCV',
     size: 'medium',
     color: 'from-blue-900/40 to-indigo-900/40',
     highlights: [

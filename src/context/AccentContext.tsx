@@ -17,6 +17,8 @@ const map: Record<Accent, { color: string; colorRgb: string; colorHex: string }>
   orange:  { color: 'text-orange-400',  colorRgb: '251,146,60',  colorHex: '#fb923c' },
 };
 
+const accents: Accent[] = ['emerald', 'violet', 'cyan', 'orange'];
+
 const AccentContext = createContext<AccentContextValue>({
   accent: 'orange',
   setAccent: () => {},
@@ -24,7 +26,7 @@ const AccentContext = createContext<AccentContextValue>({
 });
 
 export function AccentProvider({ children }: { children: ReactNode }) {
-  const [accent, setAccent] = useState<Accent>('orange');
+  const [accent, setAccent] = useState<Accent>(() => accents[Math.floor(Math.random() * accents.length)]);
   return (
     <AccentContext.Provider value={{ accent, setAccent, ...map[accent] }}>
       {children}

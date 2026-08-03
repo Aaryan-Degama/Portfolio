@@ -93,9 +93,9 @@ export default function Hero({ onOpenPalette, onNavigate }: Props) {
           className="mt-10 flex items-center gap-5"
         >
           {[
-            { Icon: Github, href: 'https://github.com' },
-            { Icon: Linkedin, href: 'https://linkedin.com' },
-            { Icon: Mail, href: 'mailto:hello@example.com' },
+            { Icon: Github, href: 'https://github.com/Aaryan-Degama' },
+            { Icon: Linkedin, href: 'https://www.linkedin.com/in/aaryan-degama-49a4a1307/' },
+            { Icon: Mail, href: 'mailto:aaryandegama@gmail.com' },
           ].map(({ Icon, href }, i) => (
             <a
               key={i}
