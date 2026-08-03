@@ -7,6 +7,7 @@ const accentOptions: { id: Accent; label: string; hex: string }[] = [
   { id: 'emerald', label: 'Emerald', hex: '#34d399' },
   { id: 'violet',  label: 'Electric Violet', hex: '#a78bfa' },
   { id: 'cyan',    label: 'Cyber Cyan', hex: '#22d3ee' },
+  { id: 'orange',  label: 'Solar Orange', hex: '#fb923c' },
 ];
 
 export default function FloatingControls() {
@@ -87,7 +88,7 @@ export default function FloatingControls() {
             initial={{ opacity: 0, x: 10, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 10, scale: 0.9 }}
-            className="flex items-center gap-1.5 mr-1 px-2 py-1.5 rounded-xl border border-white/10 bg-zinc-950/90 backdrop-blur-xl shadow-xl"
+            className="mr-1 flex max-w-[calc(100vw-7rem)] flex-wrap justify-end gap-1.5 rounded-xl border border-white/10 bg-zinc-950/90 px-2 py-1.5 backdrop-blur-xl shadow-xl"
           >
             {accentOptions.map((opt) => (
               <button

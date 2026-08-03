@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ArrowRight, Folder, User, Award, Code2, Sparkles, X } from 'lucide-react';
+import { Search, ArrowRight, Folder, User, Code2, Sparkles, X } from 'lucide-react';
 import { useAccent } from '@/context/AccentContext';
 import { projects, skills } from '@/data/portfolio';
 
@@ -30,7 +30,6 @@ export default function CommandPalette({ open, onClose, onNavigate }: Props) {
       { id: 'nav-home', label: 'Go to Home', hint: 'Section', icon: Sparkles, action: () => onNavigate('hero'), group: 'Navigation' },
       { id: 'nav-projects', label: 'Go to Projects', hint: 'Section', icon: Folder, action: () => onNavigate('projects'), group: 'Navigation' },
       { id: 'nav-about', label: 'Go to About', hint: 'Section', icon: User, action: () => onNavigate('about'), group: 'Navigation' },
-      { id: 'nav-playground', label: 'Open Playground', hint: 'Interactive', icon: Code2, action: () => onNavigate('playground'), group: 'Navigation' },
     ];
     const proj: Command[] = projects.map((p) => ({
       id: `proj-${p.id}`,

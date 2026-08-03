@@ -4,7 +4,7 @@ import { useAccent } from '@/context/AccentContext';
 import { skills, achievements } from '@/data/portfolio';
 
 export default function About() {
-  const { color } = useAccent();
+  const { color, colorHex } = useAccent();
 
   const groups = [
     { label: 'Languages', icon: Code2, items: skills.languages },
@@ -49,9 +49,9 @@ export default function About() {
             <span className="text-sm font-medium text-white">Profile</span>
           </div>
           <p className="text-sm text-zinc-400 leading-relaxed mb-5">
-            B.Tech IT student at IIIT Allahabad focused on on-device ML systems, C++ performance,
-            and practical AI deployment. Competitive programmer with a passion for building tools
-            that work without the cloud.
+            B.Tech IT student at IIIT Allahabad building privacy-first, on-device ML systems. My work
+            spans C++ performance, ONNX Runtime, computer vision, and React Native — with a focus on
+            useful AI tools that keep data on the device.
           </p>
           <div className="space-y-3">
             {achievements.map((a) => (
@@ -74,26 +74,38 @@ export default function About() {
           transition={{ delay: 0.1 }}
           className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
-          {groups.map((g) => {
+          {groups.map((g, groupIndex) => {
             const Icon = g.icon;
             return (
-              <div key={g.label} className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5">
-                <div className="flex items-center gap-2 mb-4">
-                  <Icon className={`w-4 h-4 ${color}`} />
+              <motion.div
+                key={g.label}
+                whileHover={{ y: -4 }}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition-colors hover:border-white/20"
+              >
+                <div className="absolute right-4 top-3 font-mono text-4xl font-bold text-white/[0.035]">0{groupIndex + 1}</div>
+                <div className="relative flex items-center gap-2 mb-4">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5">
+                    <Icon className={`w-4 h-4 ${color}`} />
+                  </span>
                   <span className="text-sm font-medium text-white">{g.label}</span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {g.items.map((item) => (
+                <div className="relative flex flex-wrap gap-2">
+                  {g.items.map((item, itemIndex) => (
                     <motion.span
                       key={item}
+                      initial={{ opacity: 0, y: 8 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: itemIndex * 0.04 }}
                       whileHover={{ scale: 1.05, y: -2 }}
-                      className="px-2.5 py-1 rounded-md text-xs font-mono bg-white/5 border border-white/10 text-zinc-300 hover:border-white/20 cursor-default"
+                      className="cursor-default rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-mono text-zinc-300 transition-colors hover:text-white"
+                      style={{ borderColor: `${colorHex}35` }}
                     >
                       {item}
                     </motion.span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </motion.div>

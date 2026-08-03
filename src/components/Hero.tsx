@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, Command, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
 import { useAccent } from '@/context/AccentContext';
 import { achievements } from '@/data/portfolio';
 
@@ -10,6 +11,13 @@ interface Props {
 
 export default function Hero({ onOpenPalette, onNavigate }: Props) {
   const { color, colorHex } = useAccent();
+  const [isAppleDevice, setIsAppleDevice] = useState(false);
+
+  useEffect(() => {
+    const userAgentData = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData;
+    const platform = userAgentData?.platform ?? navigator.platform ?? navigator.userAgent;
+    setIsAppleDevice(/mac|iphone|ipad|ipod/i.test(platform));
+  }, []);
 
   return (
     <section id="hero" className="relative min-h-screen flex flex-col justify-center px-6 md:px-16 lg:px-24">
@@ -27,8 +35,8 @@ export default function Hero({ onOpenPalette, onNavigate }: Props) {
           className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8"
         >
           <span className="relative flex w-2 h-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping" style={{ backgroundColor: colorHex }} />
+            <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: colorHex }} />
           </span>
           <span className="text-xs font-medium text-zinc-300 tracking-wide">Available for projects</span>
         </motion.div>
@@ -37,7 +45,7 @@ export default function Hero({ onOpenPalette, onNavigate }: Props) {
           variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
           className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-[0.95]"
         >
-          Aaryan
+          Degama Aaryan
           <br />
           Jitendrakumar
         </motion.h1>
@@ -46,9 +54,9 @@ export default function Hero({ onOpenPalette, onNavigate }: Props) {
           variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
           className="mt-6 text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed"
         >
-          Software & ML engineer crafting on-device systems and accessible AI tools.
-          Currently building <span className={color}>Vanta</span> — privacy-first semantic search,
-          100% on your device.
+          Software & ML engineer building privacy-first, on-device AI systems in C++ and React Native.
+          Currently working on <span className={color}>Vanta</span> — natural-language search for your local media,
+          with no cloud involved.
         </motion.p>
 
         <motion.div
@@ -70,9 +78,13 @@ export default function Hero({ onOpenPalette, onNavigate }: Props) {
             onClick={onOpenPalette}
             className="group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-zinc-300 border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all"
           >
-            <Command className="w-4 h-4" />
             <span>Quick Search</span>
-            <kbd className="ml-1 px-1.5 py-0.5 rounded bg-white/10 text-[10px] text-zinc-400 group-hover:text-zinc-200">K</kbd>
+            <span className="ml-1 flex items-center gap-1" aria-label={`${isAppleDevice ? 'Command' : 'Control'} K`}>
+              <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-[10px] text-zinc-400 group-hover:text-zinc-200">
+                {isAppleDevice ? '⌘' : 'Ctrl'}
+              </kbd>
+              <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-[10px] text-zinc-400 group-hover:text-zinc-200">K</kbd>
+            </span>
           </button>
         </motion.div>
 

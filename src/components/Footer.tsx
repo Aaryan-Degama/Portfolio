@@ -15,7 +15,7 @@ export default function Footer({ onNavigate }: Props) {
     <footer className="relative px-6 md:px-16 lg:px-24 py-16 border-t border-white/5">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <div>
-          <div className="text-2xl font-bold text-white mb-2">Aaryan Jitendrakumar</div>
+          <div className="text-2xl font-bold text-white mb-2">Degama Aaryan Jitendrakumar</div>
           <p className="text-sm text-zinc-500 max-w-xs leading-relaxed">
             Building on-device ML systems and accessible AI tools. Open to opportunities.
           </p>
@@ -24,7 +24,7 @@ export default function Footer({ onNavigate }: Props) {
         <div>
           <div className={`text-xs font-mono uppercase tracking-wider ${color} mb-3`}>Navigate</div>
           <div className="flex flex-col gap-2">
-            {['hero', 'projects', 'playground', 'about'].map((s) => (
+            {['hero', 'projects', 'about'].map((s) => (
               <button
                 key={s}
                 onClick={() => onNavigate(s)}
@@ -50,7 +50,7 @@ export default function Footer({ onNavigate }: Props) {
 
       <div className="flex items-center justify-between pt-6 border-t border-white/5">
         <p className="text-xs text-zinc-600">
-          © 2025 Aaryan Jitendrakumar. Crafted with React, Vite & Framer Motion.
+          © 2025 Degama Aaryan Jitendrakumar. Crafted with React, Vite & Framer Motion.
         </p>
         <motion.button
           whileHover={{ y: -2 }}
