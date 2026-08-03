@@ -32,6 +32,27 @@ export default function ProjectPage({ project, onBack }: Props) {
           <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-7xl">{project.title}</h1>
           <p className={`mt-4 text-lg font-medium md:text-xl ${color}`}>{project.subtitle}</p>
           <p className="mt-8 max-w-3xl text-lg leading-relaxed text-zinc-300">{project.longDescription}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            {project.releaseUrl && (
+              <a
+                href={project.releaseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-sm font-medium transition-colors hover:bg-white/5"
+                style={{ borderColor: `${colorHex}70`, color: colorHex }}
+              >
+                <Download className="h-4 w-4" /> Download Vanta v0.1.1 <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+            )}
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-white/20 hover:bg-white/10"
+            >
+              <Github className="h-4 w-4" /> View on GitHub <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
         </motion.div>
 
         <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -93,22 +114,6 @@ export default function ProjectPage({ project, onBack }: Props) {
           </section>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-white/10 pt-8">
-          {project.releaseUrl && (
-            <a
-              href={project.releaseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors hover:bg-white/5"
-              style={{ borderColor: `${colorHex}70`, color: colorHex }}
-            >
-              <Download className="h-4 w-4" /> Download Vanta v0.1.1 <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
-          )}
-          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="ml-auto flex items-center gap-2 text-sm font-medium transition-all hover:gap-3" style={{ color: colorHex }}>
-            <Github className="h-4 w-4" /> View on GitHub <ArrowUpRight className="h-4 w-4" />
-          </a>
-        </div>
       </div>
     </main>
   );

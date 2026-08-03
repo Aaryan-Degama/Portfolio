@@ -8,6 +8,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onNavigate: (target: string) => void;
+  onOpenProject: (projectId: string) => void;
 }
 
 interface Command {
@@ -19,7 +20,7 @@ interface Command {
   group: string;
 }
 
-export default function CommandPalette({ open, onClose, onNavigate }: Props) {
+export default function CommandPalette({ open, onClose, onNavigate, onOpenProject }: Props) {
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +37,7 @@ export default function CommandPalette({ open, onClose, onNavigate }: Props) {
       label: p.title,
       hint: p.subtitle,
       icon: Folder,
-      action: () => onNavigate('projects'),
+      action: () => onOpenProject(p.id),
       group: 'Projects',
     }));
     const skillList = [...skills.languages, ...skills.mlDl, ...skills.systems];
@@ -49,7 +50,7 @@ export default function CommandPalette({ open, onClose, onNavigate }: Props) {
       group: 'Skills',
     }));
     return [...nav, ...proj, ...sk];
-  }, [onNavigate]);
+  }, [onNavigate, onOpenProject]);
 
   const filtered = useMemo(() => {
     if (!query) return commands;
@@ -68,6 +69,15 @@ export default function CommandPalette({ open, onClose, onNavigate }: Props) {
   useEffect(() => {
     setActiveIndex(0);
   }, [query]);
+
+  function handleQueryChange(value: string) {
+    setQuery(value);
+    const project = projects.find((item) => item.title.toLowerCase() === value.trim().toLowerCase());
+    if (project) {
+      onOpenProject(project.id);
+      onClose();
+    }
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -115,7 +125,7 @@ export default function CommandPalette({ open, onClose, onNavigate }: Props) {
                 <input
                   ref={inputRef}
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => handleQueryChange(e.target.value)}
                   placeholder="Search projects, skills, sections..."
                   className="flex-1 bg-transparent text-white placeholder-zinc-500 outline-none text-[15px]"
                 />

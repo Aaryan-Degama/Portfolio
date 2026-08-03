@@ -136,6 +136,7 @@ function PortfolioSite() {
               open={paletteOpen}
               onClose={() => setPaletteOpen(false)}
               onNavigate={navigate}
+              onOpenProject={(id) => goTo(`/projects/${id}`)}
             />
           )}
         </AnimatePresence>
