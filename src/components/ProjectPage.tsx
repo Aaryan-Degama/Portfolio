@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowUpRight, Check, Github, Image, Layers } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Check, Download, Github, Image, Layers } from 'lucide-react';
 import { Project } from '@/data/portfolio';
 import { useAccent } from '@/context/AccentContext';
 
@@ -94,6 +94,17 @@ export default function ProjectPage({ project, onBack }: Props) {
         </div>
 
         <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-white/10 pt-8">
+          {project.releaseUrl && (
+            <a
+              href={project.releaseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors hover:bg-white/5"
+              style={{ borderColor: `${colorHex}70`, color: colorHex }}
+            >
+              <Download className="h-4 w-4" /> Download Vanta v0.1.1 <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          )}
           <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="ml-auto flex items-center gap-2 text-sm font-medium transition-all hover:gap-3" style={{ color: colorHex }}>
             <Github className="h-4 w-4" /> View on GitHub <ArrowUpRight className="h-4 w-4" />
           </a>

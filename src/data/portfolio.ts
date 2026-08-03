@@ -8,6 +8,7 @@ export interface Project {
   status: 'active' | 'completed' | 'archived';
   year: string;
   githubUrl: string;
+  releaseUrl?: string;
   size: 'large' | 'medium' | 'small';
   color: string;
   highlights: string[];
@@ -18,27 +19,28 @@ export const projects: Project[] = [
     id: 'vanta',
     title: 'Vanta',
     subtitle: 'On-Device Semantic Search Engine',
-    description: 'Private Android gallery that searches local photos and documents in natural language — no uploads or cloud.',
-    longDescription: 'Built a privacy-first React Native Android app that indexes local media entirely on-device. Vanta combines CLIP ViT-B/32 for visual-semantic retrieval, ArcFace face recognition, custom-trained DistilBERT NER for photo queries, and SQLite with sqlite-vec to support natural-language, people, and relationship searches without sending personal media to the cloud.',
+    description: 'Semantic search for your photos, without giving up your privacy.',
+    longDescription: 'Vanta is an on-device search engine for Android that lets you find photos and files by describing them in plain language — “the trip with Priya at the lake,” not just filenames or dates. Everything runs locally: a dependency-light C++ core fuses CLIP for visual understanding, ArcFace for face recognition, and a custom fine-tuned BERT-tiny NER model to parse who and what you are looking for, all resolved against an entity-relation knowledge graph built entirely from your own data. No images, embeddings, or queries ever leave the device.',
     tags: ['Android', 'C++', 'ONNX Runtime', 'CLIP', 'BERT', 'SQLite', 'React Native'],
     status: 'active',
     year: '2025',
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/Aaryan-Degama/Vanta',
+    releaseUrl: 'https://github.com/Aaryan-Degama/Vanta/releases/tag/v0.1.1',
     size: 'large',
     color: 'from-emerald-900/40 to-teal-900/40',
     highlights: [
-      '~280ms avg end-to-end search latency',
-      'Custom NER model for people, relationships, and photo-query intent',
-      'Shared C++ core (libvanta) via JNI for Android/iOS portability',
-      'SymSpell → NER → entity resolution → CLIP re-ranking pipeline',
+      'Multi-space vector search — CLIP, ArcFace, and text — with score fusion',
+      'Custom NER model trained and fine-tuned from scratch for query understanding',
+      'SQLite + sqlite-vec vector store',
+      'Shared C++ core built for cross-platform portability',
     ],
   },
   {
     id: 'lilcv',
     title: 'LilCV',
     subtitle: 'C++ Computer Vision Library',
-    description: 'A dependency-light C++17 vision toolkit built from scratch, including ML-powered depth-aware portrait blur.',
-    longDescription: 'Built a minimal C++17 computer vision toolkit without OpenCV or runtime Python dependencies. LilCV implements grayscale, Gaussian blur, inversion, resizing, and PPM image I/O, then integrates the MiDaS Small depth model through ONNX Runtime to create a depth-aware portrait blur pipeline.',
+    description: 'Computer vision without the OpenCV tax.',
+    longDescription: 'LilCV is a dependency-light C++ library for running vision models without dragging OpenCV into your build. Inference runs on ONNX Runtime, with monocular depth estimation via MiDaS-Small as the first capability — built for anyone who wants a CV pipeline that is small enough to read end to end, not just link against.',
     tags: ['C++17', 'ONNX Runtime', 'MiDaS', 'Computer Vision'],
     status: 'completed',
     year: '2025',
@@ -46,9 +48,9 @@ export const projects: Project[] = [
     size: 'medium',
     color: 'from-blue-900/40 to-indigo-900/40',
     highlights: [
-      'Zero OpenCV dependency — built from scratch',
-      'Depth-aware portrait blur via MiDaS-Small',
-      'Python-to-ONNX-to-C++ workflow with no Python required at runtime',
+      'OpenCV-free',
+      'ONNX Runtime inference',
+      'MiDaS-Small depth estimation',
     ],
   },
   {
