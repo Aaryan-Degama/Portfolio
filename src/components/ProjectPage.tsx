@@ -185,7 +185,7 @@ function LilCvVisual({ color, colorHex }: { color: string; colorHex: string }) {
         </div>
         <h2 className="text-2xl font-bold text-white">Small pipeline, visible results.</h2>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         {samples.map((sample, index) => (
           <motion.figure
             key={sample.src}
@@ -196,7 +196,7 @@ function LilCvVisual({ color, colorHex }: { color: string; colorHex: string }) {
             className="group overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/60 p-2"
           >
             <div className="relative overflow-hidden rounded-xl">
-              <img src={sample.src} alt={sample.label} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              <img src={sample.src} alt={sample.label} loading="lazy" className="h-[26rem] w-full bg-black object-contain transition-transform duration-500 group-hover:scale-[1.03]" />
               <div className="absolute inset-x-0 bottom-0 h-14" style={{ background: `linear-gradient(transparent, ${colorHex}40)` }} />
             </div>
             <figcaption className="px-2 py-3 text-xs font-medium text-zinc-300">{sample.label}</figcaption>
