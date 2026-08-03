@@ -170,19 +170,37 @@ function VantaVisuals({ color, colorHex }: { color: string; colorHex: string }) 
 }
 
 function LilCvVisual({ color, colorHex }: { color: string; colorHex: string }) {
-  const stages = ['Input image', 'MiDaS depth map', 'Depth-aware blur'];
+  const assetUrl = (fileName: string) => `${import.meta.env.BASE_URL}project-assets/${fileName}`;
+  const samples = [
+    { src: assetUrl('lilcv-original.jpg'), label: 'MiDaS-Small depth estimation' },
+    { src: assetUrl('lilcv-depth-blur.jpg'), label: 'Depth-aware portrait blur' },
+    { src: assetUrl('lilcv-edge.jpg'), label: 'Lightweight image processing' },
+  ];
+
   return (
-    <section className="mt-16 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
-      <div className={`mb-2 text-xs font-mono uppercase tracking-[0.2em] ${color}`}>Depth pipeline</div>
-      <h2 className="text-2xl font-bold text-white">A lightweight path from pixels to depth.</h2>
-      <div className="mt-8 grid gap-3 md:grid-cols-3">
-        {stages.map((stage, index) => (
-          <div key={stage} className="relative overflow-hidden rounded-xl border border-white/10 bg-zinc-950/70 p-5">
-            <div className="absolute inset-0 opacity-30" style={{ background: `radial-gradient(circle at ${25 + index * 25}% 30%, ${colorHex}, transparent 48%)` }} />
-            <div className="relative font-mono text-[10px] tracking-widest text-zinc-500">0{index + 1}</div>
-            <div className="relative mt-8 h-20 rounded-lg border border-white/10" style={{ background: index === 1 ? `linear-gradient(135deg, #111, ${colorHex}, #eee)` : `linear-gradient(135deg, ${colorHex}50, #18181b 70%)` }} />
-            <div className="relative mt-4 text-sm font-medium text-zinc-200">{stage}</div>
-          </div>
+    <section className="mt-16">
+      <div className="mb-6">
+        <div className={`mb-2 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] ${color}`}>
+          <Image className="h-3.5 w-3.5" /> Image experiments
+        </div>
+        <h2 className="text-2xl font-bold text-white">Small pipeline, visible results.</h2>
+      </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        {samples.map((sample, index) => (
+          <motion.figure
+            key={sample.src}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+            className="group overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/60 p-2"
+          >
+            <div className="relative overflow-hidden rounded-xl">
+              <img src={sample.src} alt={sample.label} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              <div className="absolute inset-x-0 bottom-0 h-14" style={{ background: `linear-gradient(transparent, ${colorHex}40)` }} />
+            </div>
+            <figcaption className="px-2 py-3 text-xs font-medium text-zinc-300">{sample.label}</figcaption>
+          </motion.figure>
         ))}
       </div>
     </section>
