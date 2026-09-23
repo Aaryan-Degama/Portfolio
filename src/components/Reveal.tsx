@@ -1,6 +1,10 @@
-import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef, type ReactNode } from "react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function Reveal({
   children,
@@ -12,18 +16,34 @@ export function Reveal({
   className?: string;
 }) {
   const reduced = usePrefersReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
 
-  if (reduced) return <div className={className}>{children}</div>;
+  useGSAP(
+    () => {
+      if (reduced || !ref.current) return;
+      gsap.fromTo(
+        ref.current,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          delay,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top 88%",
+            once: true,
+          },
+        },
+      );
+    },
+    { scope: ref, dependencies: [reduced] },
+  );
 
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }

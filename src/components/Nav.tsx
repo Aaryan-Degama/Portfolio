@@ -1,5 +1,6 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { projects } from "../data/projects";
@@ -44,8 +45,34 @@ export function Nav() {
   const { theme, toggle } = useTheme();
   const reduced = usePrefersReducedMotion();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const openItem = openIndex !== null ? navItems[openIndex] : null;
+  const [lastIndex, setLastIndex] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
 
+  const isOpen = openIndex !== null;
+  const displayItem = navItems[isOpen ? openIndex : lastIndex];
+
+  useGSAP(
+    () => {
+      if (!panelRef.current) return;
+      if (reduced) {
+        gsap.set(panelRef.current, { opacity: isOpen ? 1 : 0 });
+        return;
+      }
+      gsap.to(panelRef.current, {
+        opacity: isOpen ? 1 : 0,
+        y: isOpen ? 0 : -8,
+        duration: 0.25,
+        ease: "power2.out",
+      });
+    },
+    { dependencies: [isOpen, reduced] },
+  );
+
+  const open = (i: number) => {
+    if (!navItems[i].dropdown) return;
+    setLastIndex(i);
+    setOpenIndex(i);
+  };
   const close = () => setOpenIndex(null);
 
   return (
@@ -60,11 +87,12 @@ export function Nav() {
             <a
               key={item.name}
               href={item.href}
-              onMouseEnter={() => setOpenIndex(item.dropdown ? i : null)}
+              onMouseEnter={() => open(i)}
               onClick={(e) => {
                 if (item.dropdown) {
                   e.preventDefault();
-                  setOpenIndex(openIndex === i ? null : i);
+                  if (isOpen && openIndex === i) close();
+                  else open(i);
                 }
               }}
               className="group relative px-4 py-2 text-sm text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors"
@@ -84,39 +112,33 @@ export function Nav() {
         </button>
       </header>
 
-      <AnimatePresence>
-        {openItem && (
-          <motion.div
-            initial={reduced ? undefined : { opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduced ? undefined : { opacity: 0, y: -8 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 hidden sm:block bg-[var(--bg)] border-b border-[var(--border)] shadow-2xl"
-          >
-            <div className="grid grid-cols-2 gap-16 px-6 sm:px-12 py-10 max-w-3xl">
-              <ul className="flex flex-col gap-3">
-                {openItem.dropdown?.map((sub) => (
-                  <li key={sub.name}>
-                    <a
-                      href={sub.href}
-                      target={sub.href.startsWith("http") ? "_blank" : undefined}
-                      rel={sub.href.startsWith("http") ? "noreferrer" : undefined}
-                      onClick={close}
-                      className="group relative inline-block text-xl font-[var(--font-display)] text-[var(--fg)]"
-                    >
-                      {sub.name}
-                      <span className="absolute left-0 right-0 -bottom-0.5 h-px bg-[var(--fg)] origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <p className="text-sm text-[var(--fg-muted)] leading-relaxed self-start">
-                {openItem.description}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        ref={panelRef}
+        style={{ opacity: 0, pointerEvents: isOpen ? "auto" : "none" }}
+        className="relative z-10 hidden sm:block bg-[var(--bg)] border-b border-[var(--border)] shadow-2xl"
+      >
+        <div className="grid grid-cols-2 gap-16 px-6 sm:px-12 py-10 max-w-3xl">
+          <ul className="flex flex-col gap-3">
+            {displayItem.dropdown?.map((sub) => (
+              <li key={sub.name}>
+                <a
+                  href={sub.href}
+                  target={sub.href.startsWith("http") ? "_blank" : undefined}
+                  rel={sub.href.startsWith("http") ? "noreferrer" : undefined}
+                  onClick={close}
+                  className="group relative inline-block text-xl font-[var(--font-display)] text-[var(--fg)]"
+                >
+                  {sub.name}
+                  <span className="absolute left-0 right-0 -bottom-0.5 h-px bg-[var(--fg)] origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="text-sm text-[var(--fg-muted)] leading-relaxed self-start">
+            {displayItem.description}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

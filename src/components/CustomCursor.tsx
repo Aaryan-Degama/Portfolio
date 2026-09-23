@@ -1,28 +1,29 @@
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef, useState } from "react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export function CustomCursor() {
   const reduced = usePrefersReducedMotion();
   const [enabled, setEnabled] = useState(false);
-  const [hovering, setHovering] = useState(false);
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const springX = useSpring(x, { damping: 30, stiffness: 400, mass: 0.4 });
-  const springY = useSpring(y, { damping: 30, stiffness: 400, mass: 0.4 });
+  const dotRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (reduced || !window.matchMedia("(pointer: fine)").matches) return;
+  useGSAP(() => {
+    if (reduced || !window.matchMedia("(pointer: fine)").matches || !dotRef.current) return;
     document.body.classList.add("has-custom-cursor");
     setEnabled(true);
 
+    const moveX = gsap.quickTo(dotRef.current, "x", { duration: 0.35, ease: "power3" });
+    const moveY = gsap.quickTo(dotRef.current, "y", { duration: 0.35, ease: "power3" });
+    const scale = gsap.quickTo(dotRef.current, "scale", { duration: 0.2, ease: "power3" });
+
     const move = (e: MouseEvent) => {
-      x.set(e.clientX - 10);
-      y.set(e.clientY - 10);
+      moveX(e.clientX - 10);
+      moveY(e.clientY - 10);
     };
     const onOver = (e: MouseEvent) => {
       const target = (e.target as HTMLElement)?.closest("a, button, input, textarea");
-      setHovering(Boolean(target));
+      scale(target ? 1.8 : 1);
     };
 
     window.addEventListener("mousemove", move);
@@ -32,17 +33,15 @@ export function CustomCursor() {
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseover", onOver);
     };
-  }, [reduced, x, y]);
+  }, [reduced]);
 
   if (!enabled) return null;
 
   return (
-    <motion.div
+    <div
+      ref={dotRef}
       aria-hidden
-      className="pointer-events-none fixed top-0 left-0 z-[100] rounded-full mix-blend-difference bg-white"
-      style={{ x: springX, y: springY, width: 20, height: 20 }}
-      animate={{ scale: hovering ? 1.8 : 1 }}
-      transition={{ duration: 0.2 }}
+      className="pointer-events-none fixed top-0 left-0 z-[100] rounded-full mix-blend-difference bg-white w-5 h-5"
     />
   );
 }

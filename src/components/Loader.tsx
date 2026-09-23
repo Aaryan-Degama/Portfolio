@@ -1,46 +1,83 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef, useState } from "react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+
+const SCRAMBLE_CHARS = "01_/>{}ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export function Loader() {
   const reduced = usePrefersReducedMotion();
-  const [visible, setVisible] = useState(!reduced);
-  const [showName, setShowName] = useState(reduced);
+  const [visible, setVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
-    if (reduced) return;
-    const t1 = setTimeout(() => setShowName(true), 450);
-    const t2 = setTimeout(() => setVisible(false), 1900);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+  useGSAP(() => {
+    if (reduced) {
+      setVisible(false);
+      return;
+    }
+    const el = textRef.current;
+    if (!el) return;
+
+    const full = el.textContent ?? "";
+    const current: string[] = [];
+    el.textContent = "";
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.to(containerRef.current, {
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.35,
+          ease: "power2.inOut",
+          onComplete: () => setVisible(false),
+        });
+      },
+    });
+
+    full.split("").forEach((letter, i) => {
+      if (letter === " ") {
+        tl.add(() => {
+          current[i] = " ";
+          el.textContent = current.join("");
+        }, i * 0.045);
+        return;
+      }
+      tl.to(
+        {},
+        {
+          duration: 0.4,
+          repeat: 3,
+          onRepeat: () => {
+            current[i] = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+            el.textContent = current.join("");
+          },
+          onComplete: () => {
+            current[i] = letter;
+            el.textContent = current.join("");
+          },
+        },
+        i * 0.045,
+      );
+    });
   }, [reduced]);
 
+  if (!visible) return null;
+
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[var(--bg)]"
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] } }}
-        >
-          <p className="font-mono text-xs tracking-[0.3em] text-[var(--fg-muted)] uppercase">
-            booting_
-          </p>
-          <AnimatePresence>
-            {showName && (
-              <motion.h1
-                className="mt-4 font-[var(--font-display)] text-3xl sm:text-4xl tracking-tight text-[var(--fg)]"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              >
-                Aaryan Degama
-              </motion.h1>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div
+      ref={containerRef}
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-[var(--bg)]"
+    >
+      <p className="font-mono text-xs tracking-[0.3em] text-[var(--fg-muted)] uppercase">
+        booting_
+      </p>
+      <h1
+        ref={textRef}
+        className="font-[var(--font-display)] text-3xl sm:text-4xl tracking-tight text-[var(--fg)]"
+      >
+        Aaryan Degama
+      </h1>
+    </div>
   );
 }
