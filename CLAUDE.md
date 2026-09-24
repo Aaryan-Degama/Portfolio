@@ -137,24 +137,35 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
   black is light, and what was cream is black:
   - Hero: `bg-white`, name `text-void`, subtitle `text-umber` `#57524a`.
     Behind the name is `GrainGradient` (owner's call, replaced the reference's
-    TubesCursor): a raw-WebGL2 shader of silky grey-white folds with animated
-    film grain, after iamkailash.xyz but grey instead of blue. The folds drift
+    TubesCursor): a raw-WebGL2 shader of silky grey-white folds under a still
+    film grain. Keep the grain static (re-rolling it per frame read as
+    flicker) and faint (strong static grain read as dirt on the screen):
+    triangular dither, amplitude 0.035 light / 0.012 dark, after iamkailash.xyz but grey instead of blue. The folds drift
     slowly and lean toward the cursor. It stops rendering when the hero is
     offscreen, draws one still frame under reduced motion, and leaves the
     plain white hero if WebGL2 is missing.
-  - About, skills, Projects and Contact are black. They're marked
-    `home-sheet`, which replaced the reference's cream `#fcfaf0`; the
-    mobile CSS in `index.css` targets `section.home-sheet`. Text is
-    `text-snow` `#f2f1ec`, secondary `text-ash` `#a3a19b`.
+  - About, skills, Projects and Contact sit on a dark slate silk gradient
+    (owner's call): the same `GrainGradient` shader with `tone="dark"`
+    (`#0a0a0d` / `#17171c` / `#2b2b33`). It's one viewport-sized canvas,
+    `sticky top-0 h-screen -mb-[100vh] -z-10`, placed *before* `<Hero />` in
+    `LandingPage.jsx` so it sits behind the whole page. `coveredBy="#hero"`
+    pauses it while the hero fills the screen. The scroller is `isolate` so
+    the negative z stays inside it, and the sections have no background. The
+    sections are marked `home-sheet` (it replaced the reference's cream
+    `#fcfaf0`); the mobile CSS in `index.css` targets `section.home-sheet`.
+    Don't wrap the sections in a new element: that shifts the
+    `:nth-of-type` rules in the mobile CSS. Text is `text-snow` `#f2f1ec`,
+    secondary `text-ash` `#a3a19b`.
   - Project cards and skill tiles are `bg-snow`, with `text-void` /
     `text-umber`.
-  - The curve divider is transparent above the curve and overlaps the
-    hero by 115px (`-mt-[115px]`, where the black starts inside its 160px
-    svg), so the black sits at the hero's bottom edge on load and rises out
-    of the gradient on scroll. Its trigger starts at `top+=115`. The navbar dropdown
+  - The curve "divider" draws nothing (owner: no flat black band). It sets a
+    `clip-path: path(...)` on `#hero` whose bottom edge bows upward on
+    scroll, so the dark gradient shows through the bulge. Same curve and
+    timing as the reference's svg (control point 50 -> -70 in 160px/180
+    units). It leaves a 45px spacer at the top of About. The navbar dropdown
     is black.
   - The side rail uses `mix-blend-difference`: dark over the white hero,
-    light over the black sections. Keep light surfaces out of the left
+    light over the dark sections. Keep light surfaces out of the left
     ~88px below the hero (the skills strip is masked there).
 - NEON (trim only, never fills): magenta `#f967fb`, lime `#83f36e`,
   cyan `#60aed5`, ember `#fe8a2e`. One neon per project; a category is

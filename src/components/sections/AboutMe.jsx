@@ -7,7 +7,7 @@ import { NEON } from "../../theme/palette";
 
 export default function About() {
   return (
-    <section id="about" className="w-full text-snow bg-black home-sheet">
+    <section id="about" className="w-full text-snow home-sheet">
 
       <ScrollSvg />
       

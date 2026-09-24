@@ -7,7 +7,7 @@ const LINK =
 
 export default function Contact() {
   return (
-    <section id="contact" className="w-full bg-black home-sheet text-snow">
+    <section id="contact" className="w-full home-sheet text-snow">
       <div className="max-w-6xl px-8 py-40 mx-auto space-y-20">
         
         {/* Heading */}

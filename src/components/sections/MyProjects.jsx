@@ -4,7 +4,7 @@ import ProjectCard from "./ProjectCard";
 
 export default function FeaturedProjects() {
   return (
-    <section id="projects" className="flex flex-col gap-24 bg-black py-64">
+    <section id="projects" className="flex flex-col gap-24 py-64">
 
       {/* Heading */}
       <div className="max-w-6xl px-12 md:px-24 font-inter">

@@ -2,14 +2,25 @@ import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// The hero's bottom edge bows upward as you scroll into About. Nothing is
+// drawn: the hero itself is clipped along the curve, so the slate gradient
+// behind the page shows through the bulge.
 export default function ScrollSvg() {
-  const pathRef = useRef(null);
   const wrapperRef = useRef(null);
 
   useEffect(() => {
     const scrollContainer = document.querySelector(".hide-scrollbar");
+    const hero = document.getElementById("hero");
 
+    // Same curve as the reference's svg divider (viewBox units, rest line
+    // y=50, 160px tall for 180 units): the control point climbs 50 -> -70.
     const curve = { cY: 50 };
+    const clip = () => {
+      if (!hero) return;
+      const w = hero.offsetWidth, h = hero.offsetHeight;
+      const y = h - (50 - curve.cY) * (160 / 180);
+      hero.style.clipPath = `path("M 0 0 H ${w} V ${h} Q ${w / 2} ${y} 0 ${h} Z")`;
+    };
 
     const tween = gsap.to(curve, {
       cY: -70,
@@ -17,58 +28,25 @@ export default function ScrollSvg() {
       scrollTrigger: {
         trigger: wrapperRef.current,
         scroller: scrollContainer || window,
-        // Start once the black rest line (not the transparent top) hits the
-        // viewport bottom, so the curve is flat on load.
-        start: "top+=115 bottom",
-        end: "top center",
+        start: "top bottom",
+        // Ends where the old svg divider did (its top sat 115px higher).
+        end: "top-=115 center",
         scrub: true,
       },
-      onUpdate: () => {
-        pathRef.current?.setAttribute(
-          "d",
-          `
-            M 0 50
-            Q 50 ${curve.cY} 100 50
-            L 100 100
-            L 0 100
-            Z
-          `
-        );
-      },
+      onUpdate: clip,
     });
+    window.addEventListener("resize", clip);
 
     // Kill the tween and its ScrollTrigger on unmount; otherwise a later
     // ScrollTrigger.refresh() on another page fires onUpdate on a dead node.
     return () => {
+      window.removeEventListener("resize", clip);
       tween.scrollTrigger?.kill();
       tween.kill();
+      if (hero) hero.style.clipPath = "";
     };
   }, []);
 
-  return (
-    // Transparent above the curve and pulled up over the hero by 115px, which
-    // is where the black starts inside the 160px svg (y=50 of -80..100). At
-    // rest the black sits exactly at the hero's bottom edge and rises out of
-    // the gradient on scroll. relative: paint above the positioned hero.
-    <div ref={wrapperRef} className="relative -mt-[115px] w-full overflow-hidden">
-      <svg
-        className="w-screen h-40"
-        viewBox="0 -80 100 180" 
-        preserveAspectRatio="none"
-      >
-        {/* animated curve */}
-        <path
-          ref={pathRef}
-          d="
-            M 0 50
-            Q 50 50 100 50
-            L 100 100
-            L 0 100
-            Z
-          "
-          fill="black"
-        />
-      </svg>
-    </div>
-  );
+  // Spacer where the old svg ran on below the hero, keeping About's layout.
+  return <div ref={wrapperRef} aria-hidden="true" className="h-[45px]" />;
 }
