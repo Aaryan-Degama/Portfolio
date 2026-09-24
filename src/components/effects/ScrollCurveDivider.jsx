@@ -17,7 +17,9 @@ export default function ScrollSvg() {
       scrollTrigger: {
         trigger: wrapperRef.current,
         scroller: scrollContainer || window,
-        start: "top bottom",
+        // Start once the black rest line (not the transparent top) hits the
+        // viewport bottom, so the curve is flat on load.
+        start: "top+=115 bottom",
         end: "top center",
         scrub: true,
       },
@@ -44,15 +46,16 @@ export default function ScrollSvg() {
   }, []);
 
   return (
-    <div ref={wrapperRef} className="w-full overflow-hidden">
+    // Transparent above the curve and pulled up over the hero by 115px, which
+    // is where the black starts inside the 160px svg (y=50 of -80..100). At
+    // rest the black sits exactly at the hero's bottom edge and rises out of
+    // the gradient on scroll. relative: paint above the positioned hero.
+    <div ref={wrapperRef} className="relative -mt-[115px] w-full overflow-hidden">
       <svg
         className="w-screen h-40"
         viewBox="0 -80 100 180" 
         preserveAspectRatio="none"
       >
-        {/* background */}
-        <rect x="0" y="-80" width="100" height="180" fill="black" />
-
         {/* animated curve */}
         <path
           ref={pathRef}
@@ -63,7 +66,7 @@ export default function ScrollSvg() {
             L 0 100
             Z
           "
-          fill="#fcfaf0"
+          fill="black"
         />
       </svg>
     </div>

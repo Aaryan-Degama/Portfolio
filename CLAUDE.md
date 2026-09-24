@@ -72,8 +72,7 @@ npm run lint      # oxlint
 npm run deploy    # build + wrangler deploy (needs `npx wrangler login` once)
 ```
 
-The hero's TubesCursor loads `threejs-components` from jsDelivr at
-runtime; devicon icons (skills marquee) load from the jsDelivr CDN in
+Devicon icons (skills marquee) load from the jsDelivr CDN in
 `index.html`.
 
 ## Structure
@@ -87,7 +86,7 @@ src/
   components/sections/      Hero, AboutMe (+ marquee), MyProjects, ProjectCard, Contact
   components/project/       ProjectKit (PageShell, NeonTube, Section, cards, ChainDiagram…),
                             CategoryIndex (category listing page)
-  components/effects/       SideRail (fixed left rail), TubesCursor, FollowCursor,
+  components/effects/       SideRail (fixed left rail), GrainGradient, FollowCursor,
                             FrameworkMarquee, NeonMark, ScrollCurveDivider
   components/Navbar/        Navbar (nav items + dropdown content), NavItem, DropdownPanel
   data/projectIndex.js      all project/category data
@@ -100,29 +99,63 @@ src/
 masks, 9 dots pop in on the AD monogram's skeleton, strokes draw between
 them, the brush logo fades in over the dots, captions slide out, then
 `onReveal()` mounts the site underneath. On `/` the mark flies to the
-rail's logo slot (`HERO_LOGO`, must match SideRail's `top-4 left-4 p-2 w-8`);
+rail's logo slot (`HERO_LOGO`, must match SideRail's `top-4 left-4 p-2 w-11`);
 on other routes the splash just fades. `onDone()` unmounts it. Reduced
 motion: static mark, short fade. If the hero logo moves, update `HERO_LOGO`.
 
 ## Left rail (home page)
 
 `src/components/effects/SideRail.jsx`, the owner's own addition to the
-clone. It's fixed on the left of the home page: the logo, a vertical line
-and the GitHub / LinkedIn / WhatsApp icons. The logo never moves. As the
-page scrolls, the line's head slides down and the line shrinks behind it
-(first half of the page). When the head touches an icon, the icon squashes
-and shatters into 18 triangle shards, then the next one does the same.
-WhatsApp goes near the bottom of the page. It's a single GSAP timeline
-scrubbed by a ScrollTrigger on the `.hide-scrollbar` scroller, so scrolling
-up rebuilds the icons. `mix-blend-difference` keeps it visible over the
-cream sections. Reduced motion shows a static rail. Hit points are in
-`hits`; shard pattern comes from `makeShards` (seeded).
+clone. It's fixed on the left of the home page: the AD logo (`w-11`), a
+vertical bar and the GitHub / LinkedIn / WhatsApp icons. The owner
+confirmed the motion:
+
+- The AD logo and the bar's top end never move. The gap between logo and
+  bar stays constant.
+- Over the first half of the page the bar shortens from the bottom, and
+  the icon stack rides up with the bar's lower end.
+- Once the bar is completely gone, the icons keep rising. Each one squashes
+  when it touches the AD logo and shatters into 18 triangle shards: GitHub
+  first, then LinkedIn, WhatsApp at the end of the page.
+- It's scrubbed by a ScrollTrigger on the `.hide-scrollbar` scroller, so
+  scrolling up rebuilds everything.
+
+`mix-blend-difference` keeps it visible over the cream sections. Reduced
+motion shows a static rail. Hit points are in `hits`; the shard pattern
+comes from `makeShards` (seeded). Icon positions are measured with rects
+against the group, because offsetTop changes reference once the group is
+transformed. If the logo size or position changes, update `HERO_LOGO` in
+LoadingPage.jsx; that constant is the only loader line allowed to change.
 
 ## Design system (from the reference)
 
 - Tokens: `src/theme/palette.js` / `tailwind.config.js`. VOID `#0b0a09`
   ground, CARBON `#151311` surfaces, PAPER `#fffce1` type, BONE `#b9af95`
-  body, DUST `#8b8371` metadata. Home cream sheet `#fcfaf0`.
+  body, DUST `#8b8371` metadata.
+- **Home page colours are inverted from the reference** (owner's call; the
+  other pages are unchanged and keep the dark reference look). What was
+  black is light, and what was cream is black:
+  - Hero: `bg-white`, name `text-void`, subtitle `text-umber` `#57524a`.
+    Behind the name is `GrainGradient` (owner's call, replaced the reference's
+    TubesCursor): a raw-WebGL2 shader of silky grey-white folds with animated
+    film grain, after iamkailash.xyz but grey instead of blue. The folds drift
+    slowly and lean toward the cursor. It stops rendering when the hero is
+    offscreen, draws one still frame under reduced motion, and leaves the
+    plain white hero if WebGL2 is missing.
+  - About, skills, Projects and Contact are black. They're marked
+    `home-sheet`, which replaced the reference's cream `#fcfaf0`; the
+    mobile CSS in `index.css` targets `section.home-sheet`. Text is
+    `text-snow` `#f2f1ec`, secondary `text-ash` `#a3a19b`.
+  - Project cards and skill tiles are `bg-snow`, with `text-void` /
+    `text-umber`.
+  - The curve divider is transparent above the curve and overlaps the
+    hero by 115px (`-mt-[115px]`, where the black starts inside its 160px
+    svg), so the black sits at the hero's bottom edge on load and rises out
+    of the gradient on scroll. Its trigger starts at `top+=115`. The navbar dropdown
+    is black.
+  - The side rail uses `mix-blend-difference`: dark over the white hero,
+    light over the black sections. Keep light surfaces out of the left
+    ~88px below the hero (the skills strip is masked there).
 - NEON (trim only, never fills): magenta `#f967fb`, lime `#83f36e`,
   cyan `#60aed5`, ember `#fe8a2e`. One neon per project; a category is
   the gradient of its projects' neons. On cream avoid lime (too faint).

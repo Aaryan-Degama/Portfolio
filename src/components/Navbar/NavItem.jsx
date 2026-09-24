@@ -37,7 +37,7 @@ const NavItem = ({
       href={item.href}
       ref={(el) => (registerRef.current[index] = el)}
       className={`px-8 text-base cursor-pointer transition-colors group duration-300 relative outline-none ${
-        showWhiteRect ? "text-black hover:text-gray-900" : "text-gray hover:text-gray-200"
+        showWhiteRect ? "text-snow hover:text-white" : "text-gray hover:text-gray-200"
       }`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}

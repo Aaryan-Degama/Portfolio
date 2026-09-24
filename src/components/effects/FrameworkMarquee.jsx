@@ -13,6 +13,7 @@ export default function FrameworkMarquee() {
 
 /* ---------------------------------------------------- */
 
+// The left 88px stays clear so tiles never slide under the fixed side rail.
 function MarqueeRow({ reverse }) {
   const containerRef = useRef(null);
   const groupRef = useRef(null);
@@ -51,7 +52,7 @@ function MarqueeRow({ reverse }) {
       className="relative w-full py-2 overflow-hidden"
       style={{
         maskImage:
-          "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+          "linear-gradient(to right, transparent 0, transparent 88px, black calc(88px + 6%), black 92%, transparent)",
       }}
     >
       <div
@@ -105,7 +106,7 @@ function TileSet() {
         return (
           <div
             key={`${icon}-${i}`}
-            className="flex items-center justify-center flex-shrink-0 w-56 h-32 rounded-[18px] bg-void"
+            className="flex items-center justify-center flex-shrink-0 w-56 h-32 rounded-[18px] bg-snow"
           >
             <i
               className={`${icon} text-6xl`}

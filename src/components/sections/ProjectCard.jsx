@@ -38,7 +38,7 @@ export default function ProjectCard({ categoryKey }) {
       ref={ref}
       to={category.path}
       style={{ "--neon": tubeColors[0] }}
-      className={`group relative flex min-h-[26rem] flex-col justify-between overflow-hidden rounded-[18px] bg-void p-8 font-inter text-paper shadow-[0_40px_80px_-48px_rgba(11,10,9,0.6)] transition-[transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_40px_90px_-40px_var(--neon)] sm:p-10 ${FOCUS}`}
+      className={`group relative flex min-h-[26rem] flex-col justify-between overflow-hidden rounded-[18px] bg-snow p-8 font-inter text-void transition-[transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_40px_90px_-40px_var(--neon)] sm:p-10 ${FOCUS}`}
     >
       <span
         aria-hidden="true"
@@ -62,7 +62,7 @@ export default function ProjectCard({ categoryKey }) {
         {seen && <NeonTube colors={tubeColors} variant="low" delay={0.15} />}
       </h3>
 
-      <p className="mt-12 max-w-[46ch] text-base leading-7 text-bone">{category.intro}</p>
+      <p className="mt-12 max-w-[46ch] text-base leading-7 text-umber">{category.intro}</p>
     </Link>
   );
 }

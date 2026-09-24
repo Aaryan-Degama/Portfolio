@@ -28,8 +28,8 @@ const STROKES = [
   `M${pt(7)} L${pt(8)}`,
 ];
 
-// Where SideRail.jsx puts its logo: top-4 left-4, p-2, w-8 h-8.
-const HERO_LOGO = { x: 24, y: 24, size: 32 };
+// Where SideRail.jsx puts its logo: top-4 left-4, p-2, w-11 h-11.
+const HERO_LOGO = { x: 24, y: 24, size: 44 };
 
 const LoadingPage = ({ onReveal, onDone }) => {
   const rootRef = useRef(null);

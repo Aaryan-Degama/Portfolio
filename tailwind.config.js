@@ -20,6 +20,10 @@ export default {
         paper: "#fffce1",
         bone: "#b9af95",
         dust: "#8b8371",
+        // Home page (inverted scheme): light surfaces/text on black.
+        snow: "#f2f1ec",
+        ash: "#a3a19b",
+        umber: "#57524a",
       },
 
       fontFamily: {

@@ -6,11 +6,13 @@ import github from "../../assets/images/github.png";
 import linkedin from "../../assets/images/linkedIn.png";
 import whatsapp from "../../assets/images/Whatsapp.png";
 
-// The home page's left rail: logo, a vertical line, the social icons. It
-// stays fixed while the page scrolls. The line's head slides down and eats
-// the line; when it reaches an icon, the icon shatters, then the next one,
-// until the page ends. Scrubbed, so scrolling back up rebuilds everything.
-// mix-blend-difference keeps the cream rail visible over the cream sections.
+// The home page's left rail: logo, a vertical bar, the social icons. The
+// logo and the bar's top end never move. As the page scrolls the bar
+// shortens from the bottom and the icons ride up with it; once the bar is
+// gone, each icon rises into the logo and shatters on contact, GitHub
+// first, WhatsApp at the end of the page. Scrubbed, so scrolling back up
+// rebuilds everything. mix-blend-difference keeps the cream rail visible
+// over the cream sections.
 
 const SOCIALS = [
   { href: "https://github.com/Aaryan-Degama", src: github, alt: "GitHub" },
@@ -63,27 +65,33 @@ export default function SideRail({ scrollerRef }) {
     const scroller = scrollerRef.current;
 
     const ctx = gsap.context(() => {
+      const logoImg = rail.querySelector("[data-logo]");
       const track = rail.querySelector("[data-track]");
+      const group = rail.querySelector("[data-group]");
       const icons = gsap.utils.toArray("[data-icon]");
-      // Head positions, re-measured on every refresh (resize).
-      const lineTop = () => track.offsetTop - 3;
-      const lineEnd = () => track.offsetTop + track.offsetHeight - 3;
-      // Icons' offsetParent is the rail itself (the icon column isn't positioned).
-      const iconTop = (el) => () => el.offsetTop - 3;
+      // Re-measured on every refresh (resize). An icon's offsetTop changes
+      // reference once the group is transformed, so measure it against the
+      // group with rects (both move together) and the group by layout.
+      const barLength = () => -track.offsetHeight;
+      const touchLogo = (el) => () => {
+        const inGroup = el.getBoundingClientRect().top - group.getBoundingClientRect().top;
+        return -(group.offsetTop + inGroup - (logoImg.offsetTop + logoImg.offsetHeight) - 4);
+      };
 
       const tl = gsap.timeline({ defaults: { ease: "none" } });
-      tl.fromTo("[data-head]", { y: lineTop }, { y: lineEnd, duration: 0.5 }, 0)
-        .fromTo("[data-line]", { scaleY: 1 }, { scaleY: 0, duration: 0.5 }, 0)
-        .to("[data-foot]", { opacity: 0, duration: 0.02 }, 0.48);
+      // First half of the page: the bar shortens, the icons follow its end.
+      tl.fromTo("[data-line]", { scaleY: 1 }, { scaleY: 0, duration: 0.5 }, 0)
+        .fromTo("[data-group]", { y: 0 }, { y: barLength, duration: 0.5 }, 0)
+        .to("[data-dot]", { opacity: 0, duration: 0.03 }, 0.5);
 
-      // Head reaches each icon, the icon squashes on impact and breaks.
-      const hits = [0.58, 0.74, 0.9];
+      // Then each icon rises into the logo, squashes on contact and breaks.
+      const hits = [0.62, 0.78, 0.94];
       icons.forEach((icon, i) => {
         const t = hits[i];
         const from = i === 0 ? 0.5 : hits[i - 1] + 0.02;
         const whole = icon.querySelector("[data-whole]");
         const shards = icon.querySelectorAll("[data-shard]");
-        tl.to("[data-head]", { y: iconTop(icon), duration: t - from }, from)
+        tl.to("[data-group]", { y: touchLogo(icon), duration: t - from }, from)
           .to(whole, { scaleX: 1.12, scaleY: 0.82, duration: 0.015 }, t)
           .set(whole, { opacity: 0 }, t + 0.015)
           .fromTo(
@@ -95,14 +103,14 @@ export default function SideRail({ scrollerRef }) {
               rotation: (k) => SHARDS[k].rotation,
               scale: 0.5,
               opacity: 0,
-              duration: 0.08,
+              duration: 0.05,
               ease: "power2.out",
             },
             t + 0.015
           )
-          .set(icon, { visibility: "hidden" }, t + 0.095);
+          .set(icon, { visibility: "hidden" }, t + 0.065);
       });
-      tl.to("[data-head]", { opacity: 0, duration: 0.05 }, 0.95);
+      tl.set({}, {}, 1); // timeline spans the whole page
 
       ScrollTrigger.create({
         animation: tl,
@@ -120,21 +128,20 @@ export default function SideRail({ scrollerRef }) {
     <aside
       ref={railRef}
       aria-label="Links"
-      className="fixed z-20 flex flex-col items-center w-12 pointer-events-none top-4 bottom-8 left-4 mix-blend-difference"
+      className="fixed z-20 flex flex-col items-center w-14 pointer-events-none top-4 bottom-8 left-4 mix-blend-difference"
     >
+      {/* Logo size and position are mirrored by HERO_LOGO in LoadingPage.jsx. */}
       <a href="#hero" className="p-2 pointer-events-auto">
-        <img src={logo} alt="Aaryan Degama, back to top" className="w-8 h-8" />
+        <img data-logo src={logo} alt="Aaryan Degama, back to top" className="w-11 h-11" />
       </a>
 
-      <div data-track className="relative flex-1 w-full my-3">
-        <span data-line aria-hidden="true" className="absolute top-1.5 bottom-1.5 left-1/2 w-px -translate-x-1/2 origin-bottom bg-[#fffce1]" />
-        <span data-foot aria-hidden="true" className="absolute bottom-0 left-1/2 -ml-[3px] h-1.5 w-1.5 rounded-full bg-[#fffce1]" />
+      <span data-dot aria-hidden="true" className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#fffce1]" />
+      <div data-track className="relative flex-1 w-full">
+        <span data-line aria-hidden="true" className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 origin-top bg-[#fffce1]" />
       </div>
 
-      {/* Moves through the rail; starts at the top of the line. */}
-      <span data-head aria-hidden="true" className="absolute top-0 left-1/2 -ml-[3px] h-1.5 w-1.5 rounded-full bg-[#fffce1] motion-reduce:hidden" />
-
-      <div className="flex flex-col gap-5 mt-3 sm:gap-8">
+      <div data-group className="flex flex-col items-center gap-5 sm:gap-8">
+        <span data-dot aria-hidden="true" className="-mb-2 h-1.5 w-1.5 rounded-full bg-[#fffce1] sm:-mb-5" />
         {SOCIALS.map((s) => (
           <a
             key={s.alt}

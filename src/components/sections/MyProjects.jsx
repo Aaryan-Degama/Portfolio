@@ -4,11 +4,11 @@ import ProjectCard from "./ProjectCard";
 
 export default function FeaturedProjects() {
   return (
-    <section id="projects" className="flex flex-col gap-24 bg-[#fcfaf0] py-64">
+    <section id="projects" className="flex flex-col gap-24 bg-black py-64">
 
       {/* Heading */}
       <div className="max-w-6xl px-12 md:px-24 font-inter">
-        <p className="text-6xl font-semibold leading-tight text-gray-800 md:text-7xl">
+        <p className="text-6xl font-semibold leading-tight text-snow md:text-7xl">
           Discover my latest works that bring ideas to life
         </p>
       </div>

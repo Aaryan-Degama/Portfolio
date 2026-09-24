@@ -27,17 +27,17 @@ const DropdownPanel = ({
 
   return (
     <div
-      className={`absolute top-0 left-0 w-full h-[60vh] bg-[#fcfaf0] transition-opacity duration-300 z-10 pointer-events-auto ${
+      className={`absolute top-0 left-0 w-full h-[60vh] bg-black transition-opacity duration-300 z-10 pointer-events-auto ${
         showWhiteRect ? "opacity-100" : "opacity-0"
       }`}
       style={{ pointerEvents: showWhiteRect ? "auto" : "none" }}
     >
       <div className="flex h-full pt-16 pointer-events-auto">
         {/* Left Area */}
-        <div className="flex flex-col items-start justify-start w-1/2 pt-12 pb-8 pr-8 border border-gray-300 pl-72">
+        <div className="flex flex-col items-start justify-start w-1/2 pt-12 pb-8 pr-8 border border-white/15 pl-72">
           {hoverIndex !== null && navItems[hoverIndex].dropdown ? (
             <>
-              <p className="mb-1 text-xs font-normal text-gray-800">
+              <p className="mb-1 text-xs font-normal text-ash">
                 {navItems[hoverIndex].name}
               </p>
               <ul className="space-y-2">
@@ -48,7 +48,7 @@ const DropdownPanel = ({
                       ref={(el) =>
                         (dropdownRefs.current[hoverIndex][dropIndex] = el)
                       }
-                      className="relative text-xl font-semibold text-left text-black transition-colors duration-200"
+                      className="relative text-xl font-semibold text-left text-snow transition-colors duration-200"
                       onMouseEnter={() =>
                         handleDropdownMouseEnter(hoverIndex, dropIndex)
                       }
@@ -57,25 +57,25 @@ const DropdownPanel = ({
                       }
                     >
                       {dropItem.name}
-                      <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-black transition-all duration-500"></span>
+                      <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-snow transition-all duration-500"></span>
                     </a>
                   </li>
                 ))}
               </ul>
             </>
           ) : (
-            <p className="text-gray-400">No menu available</p>
+            <p className="text-ash">No menu available</p>
           )}
         </div>
 
         {/* Right Area */}
-        <div className="flex items-start justify-start w-1/2 pt-12 pl-16 pr-56 border border-gray-300">
+        <div className="flex items-start justify-start w-1/2 pt-12 pl-16 pr-56 border border-white/15">
           {hoverIndex !== null && navItems[hoverIndex].description ? (
-            <p className="font-normal text-black">
+            <p className="font-normal text-snow">
               {navItems[hoverIndex].description}
             </p>
           ) : (
-            <p className="text-gray-400">No description available</p>
+            <p className="text-ash">No description available</p>
           )}
         </div>
       </div>

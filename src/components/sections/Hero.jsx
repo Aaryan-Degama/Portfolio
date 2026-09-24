@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
-import TubesCursor from "../effects/TubesCursor";
+import GrainGradient from "../effects/GrainGradient";
 
 // The name is plain static type (owner: no per-letter animation). Only the
 // subtitle fades in.
@@ -19,17 +19,17 @@ const Hero = () => {
   }, []);
 
   return (
-    <section ref={ref} id="hero" className="relative w-full h-screen bg-black text-[#fffce1] font-inter flex items-center justify-center">
-      <TubesCursor />
-      {/* relative: plain text would otherwise paint under the tubes canvas */}
+    <section ref={ref} id="hero" className="relative w-full h-screen bg-white text-void font-inter flex items-center justify-center">
+      <GrainGradient />
+      {/* relative: keeps the text above the gradient canvas */}
       <div className="relative">
         <div className="flex items-center justify-center w-full">
-          <h1 id="name-container" className="font-display font-medium text-[clamp(3.2rem,9.2vw,9.75rem)] leading-[1] tracking-[-0.035em] whitespace-nowrap shadow-2xl">
+          <h1 id="name-container" className="font-display font-medium text-[clamp(3.2rem,9.2vw,9.75rem)] leading-[1] tracking-[-0.035em] whitespace-nowrap">
             Aaryan Degama
           </h1>
         </div>
 
-        <div className="flex items-center justify-center text-center text-xl text-[#fffce1] mt-4 shadow-2xl">
+        <div className="flex items-center justify-center text-center text-xl text-umber mt-4">
           <p id="subtitle" className="opacity-0 w-[45dvw] mx-8 font-light tracking-wide leading-relaxed">
             Systems Programming • On-Device ML
           </p>

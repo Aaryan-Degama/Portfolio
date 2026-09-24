@@ -66,7 +66,6 @@ html, body, #root {
   /* Hero Section */
   #hero {
     padding: 0 0.5rem;
-    margin-bottom: -2rem;
   }
 
   #hero #name-container {
@@ -87,21 +86,21 @@ html, body, #root {
 
 
   /* About Section */
-  section.bg-\[\#fcfaf0\]:nth-of-type(1) {
+  section.home-sheet:nth-of-type(1) {
     min-height: auto;
     padding: 1.5rem 1rem;
   }
 
-  section.bg-\[\#fcfaf0\]:nth-of-type(1) .text-center {
+  section.home-sheet:nth-of-type(1) .text-center {
     gap: 1.25rem;
   }
 
-  section.bg-\[\#fcfaf0\]:nth-of-type(1) .max-w-7xl {
+  section.home-sheet:nth-of-type(1) .max-w-7xl {
     padding: 0;
   }
 
   /* Marquee text */
-  section.bg-\[\#fcfaf0\] p.flex.justify-center {
+  section.home-sheet p.flex.justify-center {
     font-size: 1rem;
     margin-bottom: 1rem;
     font-weight: 300;
@@ -153,50 +152,50 @@ html, body, #root {
   }
 
   /* Contact Section */
-  section.w-full.bg-\[\#fcfaf0\].text-black {
+  section.w-full.home-sheet.text-snow {
     padding: 1.5rem 0;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .max-w-6xl {
+  section.w-full.home-sheet.text-snow .max-w-6xl {
     padding-left: 1rem;
     padding-right: 1rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .space-y-20 {
+  section.w-full.home-sheet.text-snow .space-y-20 {
     gap: 1.5rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .space-y-6 {
+  section.w-full.home-sheet.text-snow .space-y-6 {
     gap: 0.5rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .flex.flex-col.gap-2 {
+  section.w-full.home-sheet.text-snow .flex.flex-col.gap-2 {
     gap: 0.25rem !important;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .text-5xl {
+  section.w-full.home-sheet.text-snow .text-5xl {
     font-size: 1.25rem;
     font-weight: 600;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .text-xl {
+  section.w-full.home-sheet.text-snow .text-xl {
     font-size: 0.875rem;
     line-height: 1.5;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .text-lg {
+  section.w-full.home-sheet.text-snow .text-lg {
     font-size: 0.875rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .pt-24 {
+  section.w-full.home-sheet.text-snow .pt-24 {
     padding-top: 1.5rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .text-sm {
+  section.w-full.home-sheet.text-snow .text-sm {
     font-size: 0.75rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black a {
+  section.w-full.home-sheet.text-snow a {
     word-break: break-word;
   }
 
@@ -250,16 +249,16 @@ html, body, #root {
 
 
   /* About Section */
-  section.bg-\[\#fcfaf0\]:nth-of-type(1) {
+  section.home-sheet:nth-of-type(1) {
     padding: 2rem 1.25rem;
   }
 
-  section.bg-\[\#fcfaf0\]:nth-of-type(1) .text-4xl {
+  section.home-sheet:nth-of-type(1) .text-4xl {
     font-size: 1.5rem;
     line-height: 1.4;
   }
 
-  section.bg-\[\#fcfaf0\]:nth-of-type(1) .text-3xl {
+  section.home-sheet:nth-of-type(1) .text-3xl {
     font-size: 1.125rem;
   }
 
@@ -284,20 +283,20 @@ html, body, #root {
   }
 
   /* Contact Section */
-  section.w-full.bg-\[\#fcfaf0\].text-black {
+  section.w-full.home-sheet.text-snow {
     padding: 2rem 0;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .max-w-6xl {
+  section.w-full.home-sheet.text-snow .max-w-6xl {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .text-5xl {
+  section.w-full.home-sheet.text-snow .text-5xl {
     font-size: 1.75rem;
   }
 
-  section.w-full.bg-\[\#fcfaf0\].text-black .text-xl {
+  section.w-full.home-sheet.text-snow .text-xl {
     font-size: 1rem;
   }
 
