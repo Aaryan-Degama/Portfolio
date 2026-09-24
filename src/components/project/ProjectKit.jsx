@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { categories, nextProject, projectBySlug } from "../../data/projectIndex";
+import GrainGradient from "../effects/GrainGradient";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -121,10 +122,15 @@ export function PageShell({ neon, trail, backTo, children, footer }) {
   }, []);
 
   return (
+    // isolate: the gradient's negative z stays behind this page's content.
     <main
       style={{ "--neon": neon }}
-      className="min-h-screen overflow-x-clip bg-void font-inter text-paper antialiased selection:bg-[var(--neon)] selection:text-void"
+      className="relative isolate min-h-screen overflow-x-clip bg-void font-inter text-paper antialiased selection:bg-[var(--neon)] selection:text-void"
     >
+      {/* The home page's slate silk, fixed behind every category and project page. */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+        <GrainGradient tone="dark" />
+      </div>
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-4 pt-6 sm:px-10 lg:px-16">
         <Crumbs trail={trail} />
         {backTo && (

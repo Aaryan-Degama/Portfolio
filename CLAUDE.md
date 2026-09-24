@@ -132,8 +132,12 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
 - Tokens: `src/theme/palette.js` / `tailwind.config.js`. VOID `#0b0a09`
   ground, CARBON `#151311` surfaces, PAPER `#fffce1` type, BONE `#b9af95`
   body, DUST `#8b8371` metadata.
-- **Home page colours are inverted from the reference** (owner's call; the
-  other pages are unchanged and keep the dark reference look). What was
+- **Category and project pages** keep the dark reference look (VOID ground,
+  CARBON cards, PAPER type) but sit on the same slate silk as the home
+  page's dark sections (owner's call): `PageShell` in `ProjectKit.jsx` puts
+  a `fixed inset-0 -z-10` `GrainGradient tone="dark"` behind the content
+  (`main` is `isolate`; `bg-void` stays as the no-WebGL fallback).
+- **Home page colours are inverted from the reference** (owner's call). What was
   black is light, and what was cream is black:
   - Hero: `bg-white`, name `text-void`, subtitle `text-umber` `#57524a`.
     Behind the name is `GrainGradient` (owner's call, replaced the reference's
