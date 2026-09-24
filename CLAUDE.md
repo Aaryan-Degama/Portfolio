@@ -186,6 +186,13 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
     secondary `text-ash` `#a3a19b`.
   - Project cards and skill tiles are `bg-snow`, with `text-void` /
     `text-umber`.
+    The home project cards are filled with the hero's white silk
+    (owner's call): a `GrainGradient` behind the content under a
+    `bg-snow/30` veil (the same lift LiquidMass gives its silk); `bg-snow`
+    is the no-WebGL fallback. Rigid `rounded-[18px]` tiles: the owner tried
+    organic/blob outlines and went back to rigid. No NeonTube line through
+    the heading and no top trim (owner removed them); the neon lights the
+    hover glow and arrow.
   - The curve "divider" draws nothing (owner: no flat black band). It sets a
     `clip-path: path(...)` on `#hero` whose bottom edge bows upward on
     scroll, so the dark gradient shows through the bulge. Same curve and
@@ -201,7 +208,7 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
 - Type: `font-display` **Unbounded** (Google Fonts, owner's choice; replaced the reference's Amidone Grotesk). Hero name is static plain text (no per-letter animation, owner's call), Unbounded 500, `clamp(3.2rem,9.2vw,9.75rem)`, tracking -0.035em, as in the owner's earlier version. Unbounded is wide, so display sizes are about 25% smaller than the reference. `font-inter` body,
   `font-code` JetBrains Mono 11px uppercase for metadata.
 - Corners: `rounded-[2px]` on project pages, `rounded-[18px]` on homepage
-  dark cards/tiles.
+  cards/tiles.
 - Listings are rows (`border-t border-paper/10`), not card grids.
 - Motion: GSAP inside `gsap.context(..., ref)` with `ctx.revert()` on
   unmount; kill every ScrollTrigger on unmount. The homepage scrolls inside

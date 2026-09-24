@@ -1,54 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { categories, projectsIn } from "../../data/projectIndex";
 import { BONE } from "../../theme/palette";
-import { FOCUS, NeonTube } from "../project/ProjectKit";
+import { FOCUS } from "../project/ProjectKit";
+import GrainGradient from "../effects/GrainGradient";
 
-// A piece of the project pages' dark room, set into the home page's cream
-// sheet. The category's colour is the gradient of its projects' neons.
+// A tile of the hero's white silk set into the home page's slate. bg-snow
+// shows if WebGL2 is missing. The category's first neon lights the glow and
+// arrow on hover.
 export default function ProjectCard({ categoryKey }) {
   const category = categories[categoryKey];
-  const neons = projectsIn(categoryKey).map((p) => p.neon);
-  const tubeColors = neons.length > 1 ? neons : [neons[0] ?? BONE, BONE];
-  const trim = `linear-gradient(90deg, ${tubeColors.join(", ")})`;
-
-  // The home page scrolls inside its own container, so watch visibility
-  // with an IntersectionObserver rather than a window ScrollTrigger. The
-  // tube mounts (and draws itself) the first time the card is seen.
-  const ref = useRef(null);
-  const [seen, setSeen] = useState(false);
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return undefined;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setSeen(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.45 }
-    );
-    io.observe(node);
-    return () => io.disconnect();
-  }, []);
+  const neon = projectsIn(categoryKey)[0]?.neon ?? BONE;
 
   return (
     <Link
-      ref={ref}
       to={category.path}
-      style={{ "--neon": tubeColors[0] }}
-      className={`group relative flex min-h-[26rem] flex-col justify-between overflow-hidden rounded-[18px] bg-snow p-8 font-inter text-void transition-[transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_40px_90px_-40px_var(--neon)] sm:p-10 ${FOCUS}`}
+      style={{ "--neon": neon }}
+      className={`group relative isolate flex min-h-[26rem] flex-col justify-between overflow-hidden rounded-[18px] bg-snow p-8 font-inter text-void transition-[transform,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_40px_90px_-40px_var(--neon)] sm:p-10 ${FOCUS}`}
     >
-      <span
-        aria-hidden="true"
-        style={{ backgroundImage: trim }}
-        className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 shadow-[0_0_14px_var(--neon)] transition-transform duration-700 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
-      />
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
+        <GrainGradient />
+        {/* Lift toward white, as LiquidMass does: the deep folds alone read murky at card size. */}
+        <div className="absolute inset-0 bg-snow/30" />
+      </div>
 
       <span
         aria-hidden="true"
-        className="absolute right-8 top-7 font-display text-3xl leading-none text-dust transition-all duration-500 group-hover:translate-x-1 group-hover:text-[color:var(--neon)] sm:right-10 sm:top-9"
+        className="absolute right-8 top-7 font-display text-3xl leading-none text-umber transition-all duration-500 group-hover:translate-x-1 group-hover:text-[color:var(--neon)] sm:right-10 sm:top-9"
       >
         →
       </span>
@@ -59,7 +37,6 @@ export default function ProjectCard({ categoryKey }) {
             {line}
           </span>
         ))}
-        {seen && <NeonTube colors={tubeColors} variant="low" delay={0.15} />}
       </h3>
 
       <p className="mt-12 max-w-[46ch] text-base leading-7 text-umber">{category.intro}</p>
