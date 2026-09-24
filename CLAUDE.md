@@ -86,7 +86,8 @@ src/
   components/sections/      Hero, AboutMe (+ marquee), MyProjects, ProjectCard, Contact
   components/project/       ProjectKit (PageShell, NeonTube, Section, cards, ChainDiagram…),
                             CategoryIndex (category listing page)
-  components/effects/       SideRail (fixed left rail), GrainGradient, FollowCursor,
+  components/effects/       SideRail (fixed left rail), GrainGradient, LiquidMass,
+                            silk.js (shared silk shader + tones), FollowCursor,
                             FrameworkMarquee, NeonMark, ScrollCurveDivider
   components/Navbar/        Navbar (nav items + dropdown content), NavItem, DropdownPanel
   data/projectIndex.js      all project/category data
@@ -137,6 +138,25 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
   page's dark sections (owner's call): `PageShell` in `ProjectKit.jsx` puts
   a `fixed inset-0 -z-10` `GrainGradient tone="dark"` behind the content
   (`main` is `isolate`; `bg-void` stays as the no-WebGL fallback).
+- **Category heading liquid** (owner's call; replaced the NeonTube line that
+  crossed the heading, which the owner didn't want back). `LiquidMass`,
+  mounted inside the `CategoryIndex` h1, reveals the home hero's *white*
+  silk through the dark page, like landonorris.com's hover reveal, with the
+  viscous weight of a24.raviklaassens.com's liquid edge. One pool (owner's
+  call: one blob, left side, ~60% of the text) covers line one up to just
+  past its middle letter and all of line two, i.e. "On-De" + "ML"
+  (`COVER` = 0.55). It's placed from measured glyph rects, so it holds at
+  any size. It shows on the first frame, with no fade-in (owner's call).
+  Metaballs on slow springs lean toward the cursor; the cursor paints a
+  quarter-res trail that crawls and shrinks as it fades. Before a mouse
+  moves the pool stays on its letters; touch screens get a slow wander.
+  Inside the liquid the heading is redrawn in void from a 2D-canvas texture
+  that tracks the lines' GSAP rise and clip every frame, so the letters
+  split cream/void at the rim. The canvas sits *above* the h1 for
+  that reason. It needs an explicit height (`h-[calc(100%+6.5rem)]`): a
+  canvas with only top/bottom falls back to its 2:1 intrinsic size. It stops
+  short of the intro copy. Reduced motion: one still frame. Silk GLSL lives in `effects/silk.js`, shared with
+  `GrainGradient`.
 - **Home page colours are inverted from the reference** (owner's call). What was
   black is light, and what was cream is black:
   - Hero: `bg-white`, name `text-void`, subtitle `text-umber` `#57524a`.

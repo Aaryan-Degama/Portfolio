@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { categories, notes, projectsIn } from "../../data/projectIndex";
 import { BONE } from "../../theme/palette";
-import { ExternalLink, FOCUS, NeonTube, PageShell } from "./ProjectKit";
+import { ExternalLink, FOCUS, PageShell } from "./ProjectKit";
+import LiquidMass from "../effects/LiquidMass";
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -94,8 +95,8 @@ export default function CategoryIndex({ categoryKey }) {
   const items = projectsIn(categoryKey);
   const extra = notes[categoryKey] ?? [];
   const neons = items.map((p) => p.neon);
-  const tubeColors = neons.length > 1 ? neons : [neons[0] ?? BONE, BONE];
   const ref = useRef(null);
+  const headingRef = useRef(null);
 
   useEffect(() => {
     if (reducedMotion()) return undefined;
@@ -124,7 +125,7 @@ export default function CategoryIndex({ categoryKey }) {
     >
       <div ref={ref}>
         <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 pt-16 sm:px-10 sm:pt-24 lg:px-16">
-          <h1 className="relative font-display text-[clamp(2.6rem,9vw,8rem)] leading-[0.86] tracking-[-0.02em] text-paper">
+          <h1 ref={headingRef} className="relative font-display text-[clamp(2.6rem,9vw,8rem)] leading-[0.86] tracking-[-0.02em] text-paper">
             {category.lines.map((line) => (
               <span key={line} className="block overflow-hidden pb-[0.06em]">
                 <span data-line className="block">
@@ -132,7 +133,10 @@ export default function CategoryIndex({ categoryKey }) {
                 </span>
               </span>
             ))}
-            <NeonTube colors={tubeColors} variant="low" delay={0.5} />
+            {/* Full-bleed band over the heading; it redraws the lines dark
+                inside the liquid, so it has to sit above them. Stops short of
+                the intro copy below. */}
+            <LiquidMass anchorRef={headingRef} className="absolute -top-16 left-1/2 h-[calc(100%+6.5rem)] w-screen -translate-x-1/2" />
           </h1>
 
           <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem_2.5rem] lg:gap-12">
