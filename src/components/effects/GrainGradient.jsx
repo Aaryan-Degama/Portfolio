@@ -65,6 +65,7 @@ export default function GrainGradient({ tone = "light", coveredBy }) {
     gl.uniform3fv(gl.getUniformLocation(prog, "uMid"), rgb(t.mid));
     gl.uniform3fv(gl.getUniformLocation(prog, "uLight"), rgb(t.light));
     gl.uniform1f(gl.getUniformLocation(prog, "uSpec"), t.spec);
+    gl.uniform1f(gl.getUniformLocation(prog, "uIris"), t.iris);
     gl.uniform1f(gl.getUniformLocation(prog, "uGrain"), t.grain);
 
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

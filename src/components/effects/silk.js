@@ -11,6 +11,7 @@ export const SILK_GLSL = `
 uniform float uTime;
 uniform vec3 uDeep, uMid, uLight;
 uniform float uSpec;
+uniform float uIris; // strength of the pastel sheen; 0 = plain grey silk
 
 vec2 h2(vec2 p) {
   p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
@@ -53,6 +54,14 @@ vec3 silk(vec2 p, float e, float asp) {
   vec3 col = mix(uDeep, uMid, smoothstep(0.0, 0.55, k));
   col = mix(col, uLight, smoothstep(0.45, 1.0, k));
   col *= 0.86 + 0.2 * diff;
+
+  // A thin-film sheen: pastel pink, cyan and lime bands that follow the
+  // folds' tilt, only where the cloth bends and is bright. Hue only, so the
+  // silk keeps its tonal range; kept faint so it tints rather than paints.
+  float phase = f * 1.8 + n.x * 1.6 - n.y * 1.2 + uTime * 0.012;
+  vec3 band = 0.5 + 0.5 * cos(6.2832 * (phase + vec3(0.0, 0.33, 0.67)));
+  float w = smoothstep(0.04, 0.3, length(n.xy)) * smoothstep(0.2, 0.7, k);
+  col += (band - (band.r + band.g + band.b) / 3.0) * w * uIris;
   return col + spec * uSpec;
 }
 
@@ -77,7 +86,7 @@ export function compile(gl, type, src) {
 // "light": the hero's grey-white silk. "dark": slate silk for the sections
 // below it.
 export const TONES = {
-  light: { deep: "#8f8c87", mid: "#cbc9c2", light: "#f7f6f2", spec: 0.18, grain: 0.035 },
-  dark: { deep: "#0a0a0d", mid: "#17171c", light: "#2b2b33", spec: 0.05, grain: 0.012 },
+  light: { deep: "#8f8c87", mid: "#cbc9c2", light: "#f7f6f2", spec: 0.18, grain: 0.035, iris: 0.1 },
+  dark: { deep: "#0a0a0d", mid: "#17171c", light: "#2b2b33", spec: 0.05, grain: 0.012, iris: 0.025 },
 };
 export const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);

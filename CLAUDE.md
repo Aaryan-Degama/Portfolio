@@ -165,7 +165,10 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
     TubesCursor): a raw-WebGL2 shader of silky grey-white folds under a still
     film grain. Keep the grain static (re-rolling it per frame read as
     flicker) and faint (strong static grain read as dirt on the screen):
-    triangular dither, amplitude 0.035 light / 0.012 dark, after iamkailash.xyz but grey instead of blue. The folds drift
+    triangular dither, amplitude 0.035 light / 0.012 dark, after iamkailash.xyz but grey instead of blue. Both silks carry a faint pastel thin-film sheen
+    (pink/cyan/lime, hue only, `iris` in `TONES`: 0.1 light, 0.025 dark, so
+    it reaches every page). Owner's call: "a few tints, not too much", then
+    toned down again, the dark one twice; keep it faint. The folds drift
     slowly and lean toward the cursor. It stops rendering when the hero is
     offscreen, draws one still frame under reduced motion, and leaves the
     plain white hero if WebGL2 is missing.

@@ -191,6 +191,7 @@ export default function LiquidMass({ anchorRef, className = "" }) {
     gl.uniform3fv(main.u.uMid, rgb(tone.mid));
     gl.uniform3fv(main.u.uLight, rgb(tone.light));
     gl.uniform1f(main.u.uSpec, tone.spec);
+    gl.uniform1f(main.u.uIris, tone.iris);
     gl.uniform1f(main.u.uGrain, tone.grain);
     gl.uniform1i(main.u.uTrail, 0);
     gl.uniform1i(main.u.uText, 1);
