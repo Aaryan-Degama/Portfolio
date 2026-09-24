@@ -10,7 +10,9 @@ import whatsapp from "../../assets/images/Whatsapp.png";
 // logo and the bar's top end never move. As the page scrolls the bar
 // shortens from the bottom and the icons ride up with it; once the bar is
 // gone, each icon rises into the logo and shatters on contact, GitHub
-// first, WhatsApp at the end of the page. Scrubbed, so scrolling back up
+// first. It all plays out within the first 70% of the hero's height, so the
+// icons outrun the dark sections rising from below and never cross into
+// them (owner's call). Scrubbed, so scrolling back up
 // rebuilds everything. mix-blend-difference keeps the cream rail visible
 // over the cream sections.
 
@@ -79,7 +81,7 @@ export default function SideRail({ scrollerRef }) {
       };
 
       const tl = gsap.timeline({ defaults: { ease: "none" } });
-      // First half of the page: the bar shortens, the icons follow its end.
+      // First half: the bar shortens, the icons follow its end.
       tl.fromTo("[data-line]", { scaleY: 1 }, { scaleY: 0, duration: 0.5 }, 0)
         .fromTo("[data-group]", { y: 0 }, { y: barLength, duration: 0.5 }, 0)
         .to("[data-dot]", { opacity: 0, duration: 0.03 }, 0.5);
@@ -110,13 +112,13 @@ export default function SideRail({ scrollerRef }) {
           )
           .set(icon, { visibility: "hidden" }, t + 0.065);
       });
-      tl.set({}, {}, 1); // timeline spans the whole page
+      tl.set({}, {}, 1);
 
       ScrollTrigger.create({
         animation: tl,
         scroller,
         start: 0,
-        end: "max",
+        end: () => document.getElementById("hero").offsetHeight * 0.7,
         scrub: 0.6,
         invalidateOnRefresh: true,
       });
@@ -132,7 +134,7 @@ export default function SideRail({ scrollerRef }) {
     >
       {/* Logo size and position are mirrored by HERO_LOGO in LoadingPage.jsx. */}
       <a href="#hero" className="p-2 pointer-events-auto">
-        <img data-logo src={logo} alt="Aaryan Degama, back to top" className="w-11 h-11" />
+        <img data-logo src={logo} alt="Aaryan Degama, back to top" className="w-[52px] h-[52px] max-w-none" />
       </a>
 
       <span data-dot aria-hidden="true" className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#fffce1]" />

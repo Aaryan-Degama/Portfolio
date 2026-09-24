@@ -1,58 +1,21 @@
 import React from "react";
-import gsap from "gsap";
 
-const NavItem = ({
-  item,
-  index,
-  showWhiteRect,
-  onMouseEnter,
-  onMouseLeave,
-  onClick,
-  registerRef,
-}) => {
-  const handleEnter = () => {
-    onMouseEnter(index);
-    if (registerRef.current[index]) {
-      gsap.to(registerRef.current[index], {
-        scale: 1.1,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-    }
-  };
-
-  const handleLeave = () => {
-    if (registerRef.current[index]) {
-      gsap.to(registerRef.current[index], {
-        scale: 1.0,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-    }
-    onMouseLeave(index);
-  };
-
+// A nav link. The glass capsule behind it lives in Navbar; this reports
+// hover/focus and colours the label: the lit one goes black over the white
+// hero, white over the dark sections.
+const NavItem = ({ item, ref, lit, dark, current, onEnter, onBlur }) => {
+  const tone = lit ? (dark ? "text-snow" : "text-void") : dark ? "text-ash" : "text-gray";
   return (
     <a
       href={item.href}
-      ref={(el) => (registerRef.current[index] = el)}
-      className={`px-8 text-base cursor-pointer transition-colors group duration-300 relative outline-none ${
-        showWhiteRect ? "text-snow hover:text-white" : "text-gray hover:text-gray-200"
-      }`}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      onClick={() => onClick(index)}
+      ref={ref}
+      aria-current={current ? "location" : undefined}
+      className={`relative px-5 py-1.5 mx-3 text-lg cursor-pointer transition-colors duration-300 outline-none ${tone}`}
+      onMouseEnter={onEnter}
+      onFocus={onEnter}
+      onBlur={onBlur}
     >
-      <span className="relative">
-        {item.name}
-        <span
-          className="absolute left-0 bottom-0 w-0 h-[2px] rounded-full transition-all duration-500 ease-out group-hover:w-full"
-          style={{
-            background: "linear-gradient(90deg, #f967fb, #83f36e, #60aed5, #fe8a2e)",
-            boxShadow: "0 0 10px rgba(249, 103, 251, 0.7)",
-          }}
-        ></span>
-      </span>
+      {item.name}
     </a>
   );
 };

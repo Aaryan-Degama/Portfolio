@@ -24,14 +24,14 @@ const Hero = () => {
       {/* relative: keeps the text above the gradient canvas */}
       <div className="relative">
         <div className="flex items-center justify-center w-full">
-          <h1 id="name-container" className="font-display font-medium text-[clamp(3.2rem,9.2vw,9.75rem)] leading-[1] tracking-[-0.035em] whitespace-nowrap">
+          <h1 id="name-container" className="text-[#47474e] font-display font-medium text-[clamp(3.2rem,9.2vw,9.75rem)] leading-[1] tracking-[-0.035em] whitespace-nowrap">
             Aaryan Degama
           </h1>
         </div>
 
-        <div className="flex items-center justify-center text-center text-xl text-umber mt-4">
-          <p id="subtitle" className="opacity-0 w-[45dvw] mx-8 font-light tracking-wide leading-relaxed">
-            Systems Programming • On-Device ML
+        <div className="flex items-center justify-center text-center text-xl text-[#47474e] mt-4">
+          <p id="subtitle" className="opacity-0 w-[45dvw] mx-8 font-normal tracking-wide leading-relaxed">
+            On-Device ML
           </p>
         </div>
       </div>

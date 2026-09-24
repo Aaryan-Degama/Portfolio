@@ -29,7 +29,7 @@ const STROKES = [
 ];
 
 // Where SideRail.jsx puts its logo: top-4 left-4, p-2, w-11 h-11.
-const HERO_LOGO = { x: 24, y: 24, size: 44 };
+const HERO_LOGO = { x: 18, y: 24, size: 52 };
 
 const LoadingPage = ({ onReveal, onDone }) => {
   const rootRef = useRef(null);

@@ -34,7 +34,7 @@ so they never need repeating.
 | | |
 |---|---|
 | Name | Aaryan Degama |
-| Role line | Systems Programming • On-Device ML |
+| Role line | On-Device ML (owner removed "Systems Programming" and "Computer Vision") |
 | Study | 3rd-year B.Tech IT (Business Informatics), IIIT Allahabad, expected May 2028 |
 | Email | aaryandegama@gmail.com |
 | Phone / WhatsApp | +91 83208 94345 (`wa.me/918320894345`) |
@@ -57,7 +57,7 @@ repo/live links). Detail pages: `src/pages/projects/<Name>.jsx`.
 Adding a project: add it to `projects` (pick an unused neon from `NEON`),
 create its detail page from `ProjectKit` parts, add its route in `App.jsx`.
 Adding a category: add it to `categories`; routes and nav links derive from
-it except the Navbar dropdown (`src/components/Navbar/Navbar.jsx`).
+it.
 
 ## Stack and commands
 
@@ -72,9 +72,6 @@ npm run lint      # oxlint
 npm run deploy    # build + wrangler deploy (needs `npx wrangler login` once)
 ```
 
-Devicon icons (skills marquee) load from the jsDelivr CDN in
-`index.html`.
-
 ## Structure
 
 ```
@@ -83,13 +80,14 @@ src/
   pages/LoadingPage.jsx     itssharl.ee-style splash, "Connecting the dots..."
   pages/LandingPage.jsx     Navbar, SideRail, Hero, About, Projects, Contact
   pages/projects/           Vanta, LilCV, Slate detail pages
-  components/sections/      Hero, AboutMe (+ marquee), MyProjects, ProjectCard, Contact
+  components/sections/      Hero, AboutMe, MyProjects, ProjectCard, Contact
   components/project/       ProjectKit (PageShell, NeonTube, Section, cards, ChainDiagram…),
                             CategoryIndex (category listing page)
   components/effects/       SideRail (fixed left rail), GrainGradient, LiquidMass,
                             silk.js (shared silk shader + tones), FollowCursor,
-                            FrameworkMarquee, NeonMark, ScrollCurveDivider
-  components/Navbar/        Navbar (nav items + dropdown content), NavItem, DropdownPanel
+                            NeonMark, ScrollCurveDivider
+  components/Navbar/        Navbar (four anchor links, no dropdown: owner removed it;
+                            scroll spy + gliding glass capsule), NavItem
   data/projectIndex.js      all project/category data
   theme/palette.js          colour tokens (mirrored in tailwind.config.js)
 ```
@@ -100,24 +98,27 @@ src/
 masks, 9 dots pop in on the AD monogram's skeleton, strokes draw between
 them, the brush logo fades in over the dots, captions slide out, then
 `onReveal()` mounts the site underneath. On `/` the mark flies to the
-rail's logo slot (`HERO_LOGO`, must match SideRail's `top-4 left-4 p-2 w-11`);
+rail's logo slot (`HERO_LOGO`, must match SideRail's `top-4 left-4 p-2 w-[52px] max-w-none`);
 on other routes the splash just fades. `onDone()` unmounts it. Reduced
 motion: static mark, short fade. If the hero logo moves, update `HERO_LOGO`.
 
 ## Left rail (home page)
 
 `src/components/effects/SideRail.jsx`, the owner's own addition to the
-clone. It's fixed on the left of the home page: the AD logo (`w-11`), a
+clone. It's fixed on the left of the home page: the AD logo (52px, `max-w-none` so preflight's img max-width doesn't squeeze it to the rail; owner asked for it bigger), a
 vertical bar and the GitHub / LinkedIn / WhatsApp icons. The owner
 confirmed the motion:
 
 - The AD logo and the bar's top end never move. The gap between logo and
   bar stays constant.
-- Over the first half of the page the bar shortens from the bottom, and
-  the icon stack rides up with the bar's lower end.
+- The whole sequence plays out over the first 70% of the hero's height
+  (owner's call: the icons must shatter before they reach the dark
+  sections, never cross into them). Over the first half of that the bar
+  shortens from the bottom, and the icon stack rides up with the bar's
+  lower end, faster than the dark edge rises.
 - Once the bar is completely gone, the icons keep rising. Each one squashes
   when it touches the AD logo and shatters into 18 triangle shards: GitHub
-  first, then LinkedIn, WhatsApp at the end of the page.
+  first, then LinkedIn, then WhatsApp.
 - It's scrubbed by a ScrollTrigger on the `.hide-scrollbar` scroller, so
   scrolling up rebuilds everything.
 
@@ -160,7 +161,7 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
   `GrainGradient`.
 - **Home page colours are inverted from the reference** (owner's call). What was
   black is light, and what was cream is black:
-  - Hero: `bg-white`, name `text-void`, subtitle `text-umber` `#57524a`.
+  - Hero: `bg-white`, name grey `#47474e` (owner's pick after trying graphite, ink blue, plum, espresso and a lighter grey), subtitle the same grey, regular weight (owner: umber light was too faint on the silk).
     Behind the name is `GrainGradient` (owner's call, replaced the reference's
     TubesCursor): a raw-WebGL2 shader of silky grey-white folds under a still
     film grain. Keep the grain static (re-rolling it per frame read as
@@ -172,7 +173,7 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
     slowly and lean toward the cursor. It stops rendering when the hero is
     offscreen, draws one still frame under reduced motion, and leaves the
     plain white hero if WebGL2 is missing.
-  - About, skills, Projects and Contact sit on a dark slate silk gradient
+  - About, Projects and Contact sit on a dark slate silk gradient
     (owner's call): the same `GrainGradient` shader with `tone="dark"`
     (`#0a0a0d` / `#17171c` / `#2b2b33`). It's one viewport-sized canvas,
     `sticky top-0 h-screen -mb-[100vh] -z-10`, placed *before* `<Hero />` in
@@ -197,11 +198,26 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
     `clip-path: path(...)` on `#hero` whose bottom edge bows upward on
     scroll, so the dark gradient shows through the bulge. Same curve and
     timing as the reference's svg (control point 50 -> -70 in 160px/180
-    units). It leaves a 45px spacer at the top of About. The navbar dropdown
-    is black.
+    units). It leaves a 45px spacer at the top of About.
   - The side rail uses `mix-blend-difference`: dark over the white hero,
-    light over the dark sections. Keep light surfaces out of the left
-    ~88px below the hero (the skills strip is masked there).
+    light over the dark sections (only the logo is left by then). Keep
+    light surfaces out of the left ~88px below the hero.
+  - No skills/tools marquee (owner removed it).
+  - Nav is Home, About, Projects, Contact (owner's order), `text-lg`,
+    pinned (it sits outside the scroller). One shared iOS-style
+    liquid-glass capsule (owner's call; it replaced the reference's neon
+    underline) marks where you are: scroll spy in `Navbar.jsx` puts it on
+    the section in view, none while on Home (owner's call), and hover
+    moves it to the hovered link, then back. It glides between items like
+    iOS's tab bar: stretches toward the target, thins, then snaps on with
+    an elastic settle. The lit label is `text-void` over the white hero,
+    `text-snow` over the dark sections. The owner rejected a frosted-white version as not iOS:
+    keep it a nearly clear lens (`.liquid-glass` in `index.css`: 2px blur,
+    saturate, white 8% tint, bright specular inset rim, soft drop shadow).
+    In Chromium the rim also refracts the backdrop through the SVG
+    displacement filter `#lg-refract` in `Navbar.jsx`, gated on
+    `navigator.userAgentData` (other browsers can't do url() backdrop
+    filters and get the plain lens).
 - NEON (trim only, never fills): magenta `#f967fb`, lime `#83f36e`,
   cyan `#60aed5`, ember `#fe8a2e`. One neon per project; a category is
   the gradient of its projects' neons. On cream avoid lime (too faint).

@@ -12,7 +12,7 @@ const LandingPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-black">
-      <Navbar />
+      <Navbar scrollerRef={scrollerRef} />
       <SideRail scrollerRef={scrollerRef} />
       {/* isolate: the dark gradient's negative z stays inside the scroller */}
       <div ref={scrollerRef} className="flex-1 overflow-y-auto hide-scrollbar isolate">

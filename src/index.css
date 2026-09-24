@@ -99,13 +99,6 @@ html, body, #root {
     padding: 0;
   }
 
-  /* Marquee text */
-  section.home-sheet p.flex.justify-center {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    font-weight: 300;
-  }
-
   /* Projects Section */
   section.flex.flex-col.gap-24 {
     gap: 1.5rem;
@@ -205,32 +198,14 @@ html, body, #root {
   }
 
   nav.relative.z-20.flex .flex.justify-center > a {
-    padding-left: 0.375rem;
-    padding-right: 0.375rem;
-    font-size: 0.625rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin: 0;
+    font-size: 0.75rem;
     font-weight: 400;
     letter-spacing: 0.3px;
   }
 
-  /* Framework Marquee */
-  div.relative.w-full.py-2 {
-    padding: 0.75rem 0;
-  }
-
-  div.relative.w-full.py-2 > div > div {
-    width: 5rem;
-    height: 3.5rem;
-    gap: 0.375rem;
-    border-radius: 0.375rem;
-  }
-
-  div.relative.w-full.py-2 .text-6xl {
-    font-size: 1.25rem;
-  }
-
-  div.relative.w-full.py-2 .border-2 {
-    border-width: 1px;
-  }
 
 }
 
@@ -300,9 +275,26 @@ html, body, #root {
     font-size: 1rem;
   }
 
-  /* Framework Marquee */
-  div.relative.w-full.py-2 > div > div {
-    width: 6rem;
-    height: 4rem;
-  }
+}
+
+/* iOS-style liquid glass: a nearly clear lens, not frosted. Light blur and
+   a saturation lift, a bright specular rim (top-left strong, bottom-right
+   soft) and a soft drop shadow. Chromium also bends the backdrop at the
+   edges through the SVG displacement filter in Navbar.jsx (#lg-refract);
+   other browsers keep the plain lens. */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(2px) saturate(1.8) brightness(1.08);
+  backdrop-filter: blur(2px) saturate(1.8) brightness(1.08);
+  box-shadow:
+    inset 1.5px 1.5px 1px -0.5px rgba(255, 255, 255, 0.95),
+    inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 0 14px rgba(255, 255, 255, 0.2),
+    0 8px 20px -6px rgba(0, 0, 0, 0.22),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+[data-refract="true"] .liquid-glass {
+  backdrop-filter: url(#lg-refract) blur(2px) saturate(1.8) brightness(1.08);
 }
