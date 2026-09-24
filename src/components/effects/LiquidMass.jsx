@@ -9,7 +9,7 @@ import { SILK_GLSL, TONES, VERT, compile, rgb } from "./silk";
 // heading is redrawn dark, so it reads on the light silk. Touch screens get a
 // slow autonomous drift instead of the cursor. Raw WebGL2, like GrainGradient.
 
-const N = 7;
+const N = 9;
 const TRAIL_SCALE = 0.25; // trail buffer size vs the canvas
 const SILK_PX = 640; // css px per silk unit, about the hero's fold size
 
@@ -129,21 +129,25 @@ function texture(gl) {
   return tex;
 }
 
-// One pool over the heading's left side, laid on measured glyphs so it holds
-// at any size and for any category: line one up to just past its middle
-// letter ("On-De" of "On-Device") and all of line two. Balls: offset in units
-// of the pool's half-box, radius in units of its half-diagonal, and how far
-// each leans toward the cursor; different leans make it deform, not slide.
+// One pool in the heading's top-left corner, cutting diagonally across it,
+// laid on measured glyphs so it holds at any size and for any category. It
+// covers about COVER of the letters: line two takes at most half of them and
+// line one the rest, so line one always reaches further right. "On-De" + "ML",
+// "Shipp" + "Syst". Balls sit on a line's covered run: offset in units of the
+// run's half-box, radius in font sizes, and how far each leans toward the
+// cursor; different leans make the pool deform, not slide.
 const BALLS = [
-  { x: -0.55, y: -0.4, r: 0.6, lean: 0.3 },
-  { x: 0.05, y: -0.45, r: 0.56, lean: 0.24 },
-  { x: 0.6, y: -0.4, r: 0.5, lean: 0.2 },
-  { x: -0.6, y: 0.55, r: 0.62, lean: 0.12 },
-  { x: 0.05, y: 0.55, r: 0.56, lean: 0.16 },
-  { x: 0.62, y: 0.3, r: 0.4, lean: 0.1 },
-  { x: -1, y: 0.15, r: 0.4, lean: 0.14 },
+  { row: 0, x: -0.75, y: -0.08, r: 1.25, lean: 0.3 },
+  { row: 0, x: -0.25, y: -0.12, r: 1.2, lean: 0.24 },
+  { row: 0, x: 0.25, y: -0.05, r: 1.12, lean: 0.2 },
+  { row: 0, x: 0.68, y: 0, r: 0.98, lean: 0.22 },
+  { row: 0, x: -0.7, y: -0.75, r: 0.8, lean: 0.26 },
+  { row: 1, x: -0.75, y: 0.1, r: 1.22, lean: 0.12 },
+  { row: 1, x: -0.25, y: 0.14, r: 1.15, lean: 0.16 },
+  { row: 1, x: 0.25, y: 0.1, r: 1.05, lean: 0.1 },
+  { row: 1, x: 0.66, y: 0.05, r: 0.9, lean: 0.14 },
 ];
-const COVER = 0.55; // share of line one's letters the pool covers
+const COVER = 0.62;
 
 // Semi-implicit spring step; zeta < 1 leaves a small, slow overshoot.
 function spring(pos, vel, i, tx, ty, k, zeta, dt) {
@@ -203,7 +207,8 @@ export default function LiquidMass({ anchorRef, className = "" }) {
     const vel = new Float32Array(N * 2);
     const blobs = new Float32Array(N * 4);
     const zero = new Float32Array(N * 2);
-    const pool = { x: 0, y: 0, hw: 1, hh: 1, d: 1 };
+    const pool = { x: 0, y: 0 }; // centre, for the cursor's pull
+    const home = new Float32Array(N * 2); // each ball's resting spot
     let scale = 100; // brush and cursor reach, from the font size
     const pointer = { x: 0, y: 0, seen: false };
     // Touch screens have no cursor to wait for: they get a slow wander.
@@ -233,20 +238,25 @@ export default function LiquidMass({ anchorRef, className = "" }) {
         return { l: x, t: y, r: x + g.width, b: y + g.height };
       };
       const union = (p, q) => ({ l: Math.min(p.l, q.l), t: Math.min(p.t, q.t), r: Math.max(p.r, q.r), b: Math.max(p.b, q.b) });
-      const n = l1.firstChild.length;
-      const bx = union(box(l1, 0, Math.max(1, Math.ceil(n * COVER))), box(l2, 0, l2.firstChild.length));
-      pool.hw = (bx.r - bx.l) / 2;
-      pool.hh = (bx.b - bx.t) / 2;
-      pool.x = bx.l + pool.hw;
-      pool.y = bx.t + pool.hh;
-      pool.d = Math.hypot(pool.hw, pool.hh);
-      scale = parseFloat(getComputedStyle(anchor).fontSize) * 0.85;
+      const n1 = l1.firstChild.length, n2 = l2.firstChild.length;
+      const total = Math.round(COVER * (n1 + n2));
+      const k2 = Math.max(1, Math.min(n2, Math.floor(total / 2)));
+      const k1 = Math.max(1, Math.min(n1, total - k2));
+      const rows = [box(l1, 0, k1), box(l2, 0, k2)];
+      const bx = union(rows[0], rows[1]);
+      pool.x = (bx.l + bx.r) / 2;
+      pool.y = (bx.t + bx.b) / 2;
+      const fs = parseFloat(getComputedStyle(anchor).fontSize);
+      scale = fs * 0.85;
       BALLS.forEach((b, i) => {
-        blobs[i * 4 + 2] = b.r * pool.d;
+        const r = rows[b.row];
+        home[i * 2] = (r.l + r.r) / 2 + (b.x * (r.r - r.l)) / 2;
+        home[i * 2 + 1] = (r.t + r.b) / 2 + (b.y * (r.b - r.t)) / 2;
+        blobs[i * 4 + 2] = b.r * fs;
         blobs[i * 4 + 3] = 1;
         if (!placed) {
-          pos[i * 2] = pool.x + b.x * pool.hw;
-          pos[i * 2 + 1] = pool.y + b.y * pool.hh;
+          pos[i * 2] = home[i * 2];
+          pos[i * 2 + 1] = home[i * 2 + 1];
         }
       });
       placed = true;
@@ -377,10 +387,10 @@ export default function LiquidMass({ anchorRef, className = "" }) {
       const reach = 3 * R;
       const f = (reach / (dist + reach)) * (1 - Math.min(Math.max((dist - 5 * R) / (3 * R), 0), 1));
       BALLS.forEach((b, i) => {
-        const wx = Math.sin(time * (0.21 + i * 0.07) + i * 1.7) * 0.06 * pool.d;
-        const wy = Math.cos(time * (0.17 + i * 0.05) + i * 2.3) * 0.05 * pool.d;
-        const tx = pool.x + b.x * pool.hw + wx + dx * f * b.lean;
-        const ty = pool.y + b.y * pool.hh + wy + dy * f * b.lean * 0.6;
+        const wx = Math.sin(time * (0.21 + i * 0.07) + i * 1.7) * 0.12 * R;
+        const wy = Math.cos(time * (0.17 + i * 0.05) + i * 2.3) * 0.1 * R;
+        const tx = home[i * 2] + wx + dx * f * b.lean;
+        const ty = home[i * 2 + 1] + wy + dy * f * b.lean * 0.6;
         spring(pos, vel, i * 2, tx, ty, 5, 0.7, dt);
       });
 

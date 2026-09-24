@@ -143,10 +143,11 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
   mounted inside the `CategoryIndex` h1, reveals the home hero's *white*
   silk through the dark page, like landonorris.com's hover reveal, with the
   viscous weight of a24.raviklaassens.com's liquid edge. One pool (owner's
-  call: one blob, left side, ~60% of the text) covers line one up to just
-  past its middle letter and all of line two, i.e. "On-De" + "ML"
-  (`COVER` = 0.55). It's placed from measured glyph rects, so it holds at
-  any size. It shows on the first frame, with no fade-in (owner's call).
+  call: one blob in the top-left corner, cutting diagonally, ~60-65% of the
+  letters). It covers `COVER` (0.62) of all letters: line two takes at most
+  half, line one the rest, so line one reaches further right. That gives
+  "On-De" + "ML" and "Shipp" + "Syst". Balls sit on each line's covered
+  run, placed from measured glyph rects, so it holds at any size. It shows on the first frame, with no fade-in (owner's call).
   Metaballs on slow springs lean toward the cursor; the cursor paints a
   quarter-res trail that crawls and shrinks as it fades. Before a mouse
   moves the pool stays on its letters; touch screens get a slow wander.
