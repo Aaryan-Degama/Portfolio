@@ -39,7 +39,7 @@ so they never need repeating.
 | Email | aaryandegama@gmail.com |
 | Phone / WhatsApp | +91 83208 94345 (`wa.me/918320894345`) |
 | GitHub | https://github.com/Aaryan-Degama |
-| LinkedIn | https://linkedin.com/in/aaryandegama |
+| LinkedIn | https://www.linkedin.com/in/aaryan-degama-49a4a1307 |
 | Codeforces | https://codeforces.com/profile/Aaryan_Degama |
 | Logo | `public/logo.svg` (brush "AD", ink on cream; favicon). `src/assets/images/logo-light.svg` is the letter path only, in cream, for dark backgrounds |
 
@@ -51,17 +51,21 @@ repo/live links). Detail pages: `src/pages/projects/<Name>.jsx`.
 | Project | Category | Neon | Repo |
 |---|---|---|---|
 | Vanta (with Divy Vaghasiya) | Information Retrieval | magenta | Aaryan-Degama/Vanta |
-| LilCV | Systems Engineering | cyan | Aaryan-Degama/LilCV |
-| Slate (hackathon, team of 3) | Systems Engineering | ember | Aaryan-Degama/slate, live: main.dosqfo1xoqa7l.amplifyapp.com |
-| Dhool (WeMakeDevs × AWS Environmental Hacks, built solo) | Systems Engineering | lime | Aaryan-Degama/Dhool_aws, live: main.d18fp2anb76xgh.amplifyapp.com |
+| LilCV | Low-Level Systems | cyan | Aaryan-Degama/LilCV |
+| Slate (hackathon, team of 3) | Shipped Systems | ember | Aaryan-Degama/slate, live: main.dosqfo1xoqa7l.amplifyapp.com |
+| Dhool (WeMakeDevs × AWS Environmental Hacks, built solo) | Shipped Systems | lime | Aaryan-Degama/Dhool_aws, live: main.d18fp2anb76xgh.amplifyapp.com |
 | TieTrace (FalkorDB Graph Hacks, with Abdul Azeem: always credit him) | Information Retrieval | violet | Aaryan-Degama/TieTrace |
 
 Adding a project: add it to `projects` (pick an unused neon from `NEON`),
 create its detail page from `ProjectKit` parts, add its route in `App.jsx`.
 Adding a category: add it to `categories`; routes and nav links derive from
-it. The old category URLs (`/projects/on-device-ml`, `/projects/shipped-systems`)
-redirect to the new ones in `App.jsx`. A category's first project's neon
-lights its home card, so Vanta (magenta) and Slate (ember) lead their groups.
+it. Categories match the About line (owner's call): Information Retrieval,
+Low-Level Systems, Shipped Systems. ("Systems Engineering" was tried and
+dropped: wrong word for both LilCV and the AWS apps.) The old
+`/projects/on-device-ml` URL redirects in `App.jsx`. Three home cards on a
+two-column grid leave the third alone on its row; three columns would
+squeeze "Information" off the card. A category's first project's neon
+lights its home card, so Vanta (magenta), LilCV (cyan) and Slate (ember) lead their groups.
 
 ## Stack and commands
 
@@ -125,6 +129,9 @@ confirmed the motion:
   first, then LinkedIn, then WhatsApp.
 - It's scrubbed by a ScrollTrigger on the `.hide-scrollbar` scroller, so
   scrolling up rebuilds everything.
+- The bar is a 2px line on whole pixels (`left-1/2 -ml-px w-[2px]`). The old
+  `w-px -translate-x-1/2` sat on a half pixel and smeared out of sight on
+  some screens (owner noticed it "gone").
 
 `mix-blend-difference` keeps it visible over the cream sections. Reduced
 motion shows a static rail. Hit points are in `hits`; the shard pattern

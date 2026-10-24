@@ -12,13 +12,21 @@ export const categories = {
     intro:
       "Finding the right thing in data you already have: plain-sentence search over a phone's photo library with nothing uploaded, and expert ties traced through a research graph with a DOI behind every one.",
   },
-  "systems-engineering": {
-    title: "Systems Engineering",
-    lines: ["Systems", "Engineering"],
-    crumb: "Systems engineering",
-    path: "/projects/systems-engineering",
+  "low-level-systems": {
+    title: "Low-Level Systems",
+    lines: ["Low-Level", "Systems"],
+    crumb: "Low-level systems",
+    path: "/projects/low-level-systems",
     intro:
-      "From the pixel buffer up to the cloud: a serverless timetable for 1,801 IIIT Allahabad students, a rooftop-solar checker on real weather, and a computer vision toolkit in plain C++ with no OpenCV.",
+      "Written from the pixel buffer up: a computer vision toolkit in plain C++17, with portrait blur from a MiDaS depth map and no OpenCV.",
+  },
+  "shipped-systems": {
+    title: "Shipped Systems",
+    lines: ["Shipped", "Systems"],
+    crumb: "Shipped systems",
+    path: "/projects/shipped-systems",
+    intro:
+      "Software deployed on real data: a serverless timetable for 1,801 IIIT Allahabad students, and a rooftop-solar checker on real weather.",
   },
 };
 
@@ -48,7 +56,7 @@ export const projects = [
   {
     slug: "slate",
     name: "Slate",
-    category: "systems-engineering",
+    category: "shipped-systems",
     neon: NEON.ember,
     kind: "Hackathon project, team of three",
     summary:
@@ -60,7 +68,7 @@ export const projects = [
   {
     slug: "dhool",
     name: "Dhool",
-    category: "systems-engineering",
+    category: "shipped-systems",
     neon: NEON.lime,
     kind: "Solo hackathon project, WeMakeDevs × AWS",
     summary:
@@ -72,7 +80,7 @@ export const projects = [
   {
     slug: "lilcv",
     name: "LilCV",
-    category: "systems-engineering",
+    category: "low-level-systems",
     neon: NEON.cyan,
     kind: "Personal project",
     summary:

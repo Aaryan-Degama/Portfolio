@@ -17,7 +17,7 @@ export default function Contact() {
           </h2>
           <p className="max-w-2xl text-xl leading-relaxed text-ash md:text-2xl">
             If you want to discuss a project, collaboration, or just have a
-            conversation about systems, on-device ML, or anything worth building
+            conversation about information retrieval, low-level systems, or anything worth building
             from first principles, reach out.
           </p>
         </div>
@@ -51,13 +51,13 @@ export default function Contact() {
           <div className="flex flex-col gap-2">
             <span className="text-ash">LinkedIn</span>
             <a
-              href="https://linkedin.com/in/aaryandegama"
+              href="https://www.linkedin.com/in/aaryan-degama-49a4a1307"
               target="_blank"
               rel="noopener noreferrer"
               className={LINK}
               style={{ "--neon": NEON.ember }}
             >
-              linkedin.com/in/aaryandegama
+              linkedin.com/in/aaryan-degama-49a4a1307
             </a>
           </div>
 

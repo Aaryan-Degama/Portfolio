@@ -18,7 +18,7 @@ import whatsapp from "../../assets/images/Whatsapp.png";
 
 const SOCIALS = [
   { href: "https://github.com/Aaryan-Degama", src: github, alt: "GitHub" },
-  { href: "https://linkedin.com/in/aaryandegama", src: linkedin, alt: "LinkedIn" },
+  { href: "https://www.linkedin.com/in/aaryan-degama-49a4a1307", src: linkedin, alt: "LinkedIn" },
   { href: "https://wa.me/918320894345", src: whatsapp, alt: "WhatsApp" },
 ];
 
@@ -139,7 +139,7 @@ export default function SideRail({ scrollerRef }) {
 
       <span data-dot aria-hidden="true" className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#fffce1]" />
       <div data-track className="relative flex-1 w-full">
-        <span data-line aria-hidden="true" className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 origin-top bg-[#fffce1]" />
+        <span data-line aria-hidden="true" className="absolute inset-y-0 left-1/2 -ml-px w-[2px] origin-top bg-[#fffce1]" />
       </div>
 
       <div data-group className="flex flex-col items-center gap-5 sm:gap-8">
