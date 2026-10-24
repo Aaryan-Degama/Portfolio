@@ -33,6 +33,9 @@ const App = () => {
             <Route path="/projects/lilcv" element={<LilCV />} />
             <Route path="/projects/dhool" element={<Dhool />} />
             <Route path="/projects/tietrace" element={<TieTrace />} />
+            {/* Old category URLs, from before the regroup. */}
+            <Route path="/projects/on-device-ml" element={<Navigate to="/projects/information-retrieval" replace />} />
+            <Route path="/projects/shipped-systems" element={<Navigate to="/projects/systems-engineering" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
 

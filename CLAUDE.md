@@ -34,7 +34,7 @@ so they never need repeating.
 | | |
 |---|---|
 | Name | Aaryan Degama |
-| Role line | On-Device ML (owner removed "Systems Programming" and "Computer Vision") |
+| Role line | Information Retrieval · Systems (owner's positioning; About line is "drawn to information retrieval and low-level systems", owner removed the on-device ML clause) |
 | Study | 3rd-year B.Tech IT (Business Informatics), IIIT Allahabad, expected May 2028 |
 | Email | aaryandegama@gmail.com |
 | Phone / WhatsApp | +91 83208 94345 (`wa.me/918320894345`) |
@@ -50,16 +50,18 @@ repo/live links). Detail pages: `src/pages/projects/<Name>.jsx`.
 
 | Project | Category | Neon | Repo |
 |---|---|---|---|
-| Vanta (with Divy Vaghasiya) | On-Device ML | magenta | Aaryan-Degama/Vanta |
-| LilCV | On-Device ML | cyan | Aaryan-Degama/LilCV |
-| Slate (hackathon, team of 3) | Shipped Systems | ember | Aaryan-Degama/slate, live: main.dosqfo1xoqa7l.amplifyapp.com |
-| Dhool (WeMakeDevs × AWS Environmental Hacks, built solo) | Shipped Systems | lime | Aaryan-Degama/Dhool_aws, live: main.d18fp2anb76xgh.amplifyapp.com |
-| TieTrace (FalkorDB Graph Hacks, with Abdul Azeem: always credit him) | Shipped Systems | violet | Aaryan-Degama/TieTrace |
+| Vanta (with Divy Vaghasiya) | Information Retrieval | magenta | Aaryan-Degama/Vanta |
+| LilCV | Systems Engineering | cyan | Aaryan-Degama/LilCV |
+| Slate (hackathon, team of 3) | Systems Engineering | ember | Aaryan-Degama/slate, live: main.dosqfo1xoqa7l.amplifyapp.com |
+| Dhool (WeMakeDevs × AWS Environmental Hacks, built solo) | Systems Engineering | lime | Aaryan-Degama/Dhool_aws, live: main.d18fp2anb76xgh.amplifyapp.com |
+| TieTrace (FalkorDB Graph Hacks, with Abdul Azeem: always credit him) | Information Retrieval | violet | Aaryan-Degama/TieTrace |
 
 Adding a project: add it to `projects` (pick an unused neon from `NEON`),
 create its detail page from `ProjectKit` parts, add its route in `App.jsx`.
 Adding a category: add it to `categories`; routes and nav links derive from
-it.
+it. The old category URLs (`/projects/on-device-ml`, `/projects/shipped-systems`)
+redirect to the new ones in `App.jsx`. A category's first project's neon
+lights its home card, so Vanta (magenta) and Slate (ember) lead their groups.
 
 ## Stack and commands
 
@@ -240,6 +242,9 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
 ## Checking visually
 
 Headless Chrome via playwright-core works (`/usr/bin/google-chrome`).
+playwright-core isn't a dependency here; import it from
+`~/.cache/dhool-e2e/node_modules/playwright-core/index.mjs`. Category
+headings need ~16s after a direct load to finish rising.
 The Chrome extension tab is usually hidden, which throttles GSAP, so use
 headless screenshots at 1440px and 390px. The loader plus hero intro take
 about 12s to settle.

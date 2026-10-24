@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // The hero's bottom edge bows upward as you scroll into About. Nothing is
 // drawn: the hero itself is clipped along the curve, so the slate gradient

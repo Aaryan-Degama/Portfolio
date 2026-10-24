@@ -31,7 +31,7 @@ const Hero = () => {
 
         <div className="flex items-center justify-center text-center text-xl text-[#47474e] mt-4">
           <p id="subtitle" className="opacity-0 w-[45dvw] mx-8 font-normal tracking-wide leading-relaxed">
-            On-Device ML
+            Information Retrieval · Systems
           </p>
         </div>
       </div>
