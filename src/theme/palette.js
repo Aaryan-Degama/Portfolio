@@ -27,6 +27,7 @@ export const NEON = {
   lime: "#83f36e",
   cyan: "#60aed5",
   ember: "#fe8a2e",
+  violet: "#a87bff",
 };
 
 // Categorical colors for diagram branches and legends. Deliberately muted so

@@ -53,6 +53,8 @@ repo/live links). Detail pages: `src/pages/projects/<Name>.jsx`.
 | Vanta (with Divy Vaghasiya) | On-Device ML | magenta | Aaryan-Degama/Vanta |
 | LilCV | On-Device ML | cyan | Aaryan-Degama/LilCV |
 | Slate (hackathon, team of 3) | Shipped Systems | ember | Aaryan-Degama/slate, live: main.dosqfo1xoqa7l.amplifyapp.com |
+| Dhool (WeMakeDevs × AWS Environmental Hacks, built solo) | Shipped Systems | lime | Aaryan-Degama/Dhool_aws, live: main.d18fp2anb76xgh.amplifyapp.com |
+| TieTrace (FalkorDB Graph Hacks, with Abdul Azeem: always credit him) | Shipped Systems | violet | Aaryan-Degama/TieTrace |
 
 Adding a project: add it to `projects` (pick an unused neon from `NEON`),
 create its detail page from `ProjectKit` parts, add its route in `App.jsx`.
@@ -79,7 +81,7 @@ src/
   App.jsx                   loader overlay + routes (site mounts under the loader)
   pages/LoadingPage.jsx     itssharl.ee-style splash, "Connecting the dots..."
   pages/LandingPage.jsx     Navbar, SideRail, Hero, About, Projects, Contact
-  pages/projects/           Vanta, LilCV, Slate detail pages
+  pages/projects/           Vanta, LilCV, Slate, Dhool, TieTrace detail pages
   components/sections/      Hero, AboutMe, MyProjects, ProjectCard, Contact
   components/project/       ProjectKit (PageShell, NeonTube, Section, cards, ChainDiagram…),
                             CategoryIndex (category listing page)
@@ -219,7 +221,8 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
     `navigator.userAgentData` (other browsers can't do url() backdrop
     filters and get the plain lens).
 - NEON (trim only, never fills): magenta `#f967fb`, lime `#83f36e`,
-  cyan `#60aed5`, ember `#fe8a2e`. One neon per project; a category is
+  cyan `#60aed5`, ember `#fe8a2e`, violet `#a87bff` (added for TieTrace; all
+  five are now taken, so a new project needs a new neon). One neon per project; a category is
   the gradient of its projects' neons. On cream avoid lime (too faint).
 - Type: `font-display` **Unbounded** (Google Fonts, owner's choice; replaced the reference's Amidone Grotesk). Hero name is static plain text (no per-letter animation, owner's call), Unbounded 500, `clamp(3.2rem,9.2vw,9.75rem)`, tracking -0.035em, as in the owner's earlier version. Unbounded is wide, so display sizes are about 25% smaller than the reference. `font-inter` body,
   `font-code` JetBrains Mono 11px uppercase for metadata.
@@ -243,6 +246,7 @@ about 12s to settle.
 
 ## Known leftovers
 
+- Never put the Dhool README's shared judge login on the site.
 - `Slate.jsx` copy was adapted from the reference's Slate page (same
   hackathon project, team of three). Keep its facts in line with the
   slate README.

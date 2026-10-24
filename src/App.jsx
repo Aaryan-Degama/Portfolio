@@ -6,6 +6,8 @@ import CategoryIndex from "./components/project/CategoryIndex";
 import Vanta from "./pages/projects/Vanta";
 import Slate from "./pages/projects/Slate";
 import LilCV from "./pages/projects/LilCV";
+import Dhool from "./pages/projects/Dhool";
+import TieTrace from "./pages/projects/TieTrace";
 import FollowCursor from "./components/effects/FollowCursor";
 import { categories } from "./data/projectIndex";
 
@@ -29,6 +31,8 @@ const App = () => {
             <Route path="/projects/vanta" element={<Vanta />} />
             <Route path="/projects/slate" element={<Slate />} />
             <Route path="/projects/lilcv" element={<LilCV />} />
+            <Route path="/projects/dhool" element={<Dhool />} />
+            <Route path="/projects/tietrace" element={<TieTrace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
 

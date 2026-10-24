@@ -18,7 +18,7 @@ export const categories = {
     crumb: "Shipped systems",
     path: "/projects/shipped-systems",
     intro:
-      "Software with real users on real data: a serverless timetable for 1,801 IIIT Allahabad students, built and deployed in four days.",
+      "Software built on real data: a serverless timetable for 1,801 IIIT Allahabad students, a rooftop-solar checker on real weather, and an expert-ties tracer over the OpenAlex research graph.",
   },
 };
 
@@ -56,6 +56,29 @@ export const projects = [
     stack: ["AWS Amplify", "Lambda", "DynamoDB", "Cedar"],
     repo: "https://github.com/Aaryan-Degama/slate",
     live: "https://main.dosqfo1xoqa7l.amplifyapp.com",
+  },
+  {
+    slug: "dhool",
+    name: "Dhool",
+    category: "shipped-systems",
+    neon: NEON.lime,
+    kind: "Solo hackathon project, WeMakeDevs × AWS",
+    summary:
+      "Tells a rooftop-solar household what its roof should have made in today's weather, and whether to wash the panels, call the vendor or wait.",
+    stack: ["AWS SAM", "Lambda", "pvlib", "DynamoDB", "React"],
+    repo: "https://github.com/Aaryan-Degama/Dhool_aws",
+    live: "https://main.d18fp2anb76xgh.amplifyapp.com",
+  },
+  {
+    slug: "tietrace",
+    name: "TieTrace",
+    category: "shipped-systems",
+    neon: NEON.violet,
+    kind: "Hackathon project, with Abdul Azeem",
+    summary:
+      "Checks how connected an expert in a story is to the company it covers, from an OpenAlex research graph in FalkorDB, with a DOI behind every tie.",
+    stack: ["Python", "MCP", "FalkorDB", "OpenAlex"],
+    repo: "https://github.com/Aaryan-Degama/TieTrace",
   },
 ];
 
