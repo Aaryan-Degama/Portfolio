@@ -26,7 +26,7 @@ so they never need repeating.
 - Everything else stays a faithful clone of the reference, re-skinned
   with Aaryan's content. Don't restyle it into something else.
 - Real content only: facts come from the project READMEs and the resume
-  (`resume/Aaryan_Degama.pdf`, also served as `public/resume.pdf`). Never
+  (`resume/Aaryan_Degama.pdf`, also served as `public/resume.pdf`; replaced with the updated resume `Degama_Aaryan_Jitendrakumar.pdf`: adds Cloud/TypeScript skills, Sarvam AI sprint top 5, English fluent). Never
   invent metrics.
 
 ## Owner info
