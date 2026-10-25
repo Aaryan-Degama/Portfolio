@@ -150,7 +150,16 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
   page's dark sections (owner's call): `PageShell` in `ProjectKit.jsx` puts
   a `fixed inset-0 -z-10` `GrainGradient tone="dark"` behind the content
   (`main` is `isolate`; `bg-void` stays as the no-WebGL fallback).
-- **Category heading liquid** (owner's call; replaced the NeonTube line that
+- **Project and category titles** use `GlowTitle` (`ProjectKit.jsx`): plain
+  cream type, two outlined echoes trailing down-left, a soft glow that makes one
+  slow pass on load then follows the cursor (`bg-clip-text` radial gradient,
+  `--mx/--my`). Project pages: single neon, plus a faint neon hairline under the
+  title. Category pages: pass `neon`, so the glow runs neon to the next hue and
+  the echoes take the next two round `HUES` (ember, magenta, violet, cyan,
+  lime), 1px strokes. Owner's calls: no NeonTube line, no liquid blob on project
+  pages; project pages stay single-neon (don't recolour them); a heavier 2px
+  multi-colour version looked bad.
+- **Category heading liquid** (SUPERSEDED by the GlowTitle colour version above, `LiquidMass` is now unused; originally owner's call; replaced the NeonTube line that
   crossed the heading, which the owner didn't want back). `LiquidMass`,
   mounted inside the `CategoryIndex` h1, reveals the home hero's *white*
   silk through the dark page, like landonorris.com's hover reveal, with the

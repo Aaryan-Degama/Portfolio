@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { categories, nextProject, projectBySlug } from "../../data/projectIndex";
+import { NEON } from "../../theme/palette";
 import GrainGradient from "../effects/GrainGradient";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -180,6 +181,56 @@ function Fact({ label, children }) {
   );
 }
 
+// A title line: it rises out of a mask, two outlined neon echoes trail it down-left,
+// and a soft neon glow makes one slow pass across it, then follows the cursor.
+const HUES = [NEON.ember, NEON.magenta, NEON.violet, NEON.cyan, NEON.lime];
+
+export function GlowTitle({ text, neon, stacked = false }) {
+  // With `neon` (category pages): that neon, then the next two round the hue wheel, like offset print plates.
+  // Without `neon` (project pages) all plates are the page's own neon.
+  const at = Math.max(0, HUES.indexOf(neon));
+  const plates = [0, 1, 2].map((i) => (neon ? HUES[(at + i) % HUES.length] : "var(--neon)"));
+  const line = useRef(null);
+  useEffect(() => {
+    if (reducedMotion()) return undefined;
+    const tween = gsap.fromTo(
+      line.current,
+      { "--mx": "-10%", "--my": "55%" },
+      { "--mx": "110%", "--my": "45%", duration: 2.6, delay: 0.9, ease: "power2.inOut" }
+    );
+    return () => tween.kill();
+  }, []);
+
+  return (
+    <span className={`block overflow-hidden pb-[0.14em] ${stacked ? "-mb-[0.08em]" : ""}`}>
+      <span ref={line} data-line className="relative inline-block">
+        {[1, 2].map((k) => (
+          <span
+            key={k}
+            aria-hidden="true"
+            style={{ transform: `translate(${-0.035 * k}em, ${0.045 * k}em)`, opacity: (neon ? 0.75 : 0.5) / k, WebkitTextStroke: `1px ${plates[k]}` }}
+            className="pointer-events-none absolute inset-0 select-none text-transparent"
+          >
+            {text}
+          </span>
+        ))}
+        <span
+          onPointerMove={(e) => {
+            const r = e.currentTarget.getBoundingClientRect();
+            e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+            e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+          }}
+          onPointerLeave={(e) => e.currentTarget.style.setProperty("--mx", "-9999px")}
+          style={{ backgroundImage: `radial-gradient(circle 20vw at var(--mx,-9999px) var(--my,0), ${plates[0]}, ${plates[1]} 45%, transparent 75%), linear-gradient(#fffce1,#fffce1)` }}
+          className="relative inline-block bg-clip-text text-transparent"
+        >
+          {text}
+        </span>
+      </span>
+    </span>
+  );
+}
+
 function ProjectHero({ project, tagline, tags }) {
   const ref = useRef(null);
 
@@ -187,9 +238,9 @@ function ProjectHero({ project, tagline, tags }) {
     if (reducedMotion()) return undefined;
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        "[data-hero-title]",
-        { yPercent: 18, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 1.1, ease: "power3.out" }
+        "[data-line]",
+        { yPercent: 100 },
+        { yPercent: 0, duration: 1, ease: "power3.out" }
       );
       gsap.fromTo(
         "[data-hero-rest]",
@@ -212,15 +263,12 @@ function ProjectHero({ project, tagline, tags }) {
         </p>
       </div>
 
-      {/* The title bleeds off the right edge on purpose; the tube runs through it. */}
-      <div className="relative mt-6 overflow-hidden">
-        <h1
-          data-hero-title
-          className="-mr-[0.06em] whitespace-nowrap text-right font-display text-[clamp(4rem,18vw,16rem)] leading-[0.82] tracking-[-0.02em] text-paper"
-        >
-          {project.name}
+      {/* The title bleeds off the right edge on purpose. A soft neon light follows the cursor through the letters. */}
+      <div className="relative mt-6 overflow-x-clip">
+        <h1 className="-mr-[0.06em] whitespace-nowrap text-right font-display text-[clamp(4rem,18vw,16rem)] leading-[0.82] tracking-[-0.02em] text-paper">
+          <GlowTitle text={project.name} />
         </h1>
-        <NeonTube colors={project.neon} />
+        <span aria-hidden="true" className="mx-auto mt-6 block h-px max-w-6xl bg-gradient-to-r from-transparent via-[var(--neon)] to-transparent opacity-50" />
       </div>
 
       <div className="mx-auto mt-12 grid w-full max-w-6xl gap-10 px-4 sm:px-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16 lg:px-16">
