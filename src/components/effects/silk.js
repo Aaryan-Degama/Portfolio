@@ -86,7 +86,7 @@ export function compile(gl, type, src) {
 // "light": the hero's grey-white silk. "dark": slate silk for the sections
 // below it.
 export const TONES = {
-  light: { deep: "#8f8c87", mid: "#cbc9c2", light: "#f7f6f2", spec: 0.18, grain: 0.035, iris: 0.1 },
-  dark: { deep: "#0a0a0d", mid: "#17171c", light: "#2b2b33", spec: 0.05, grain: 0.012, iris: 0.025 },
+  light: { deep: "#8f8c87", mid: "#cbc9c2", light: "#f7f6f2", spec: 0.18, grain: 0.012, iris: 0.1 },
+  dark: { deep: "#0a0a0d", mid: "#17171c", light: "#2b2b33", spec: 0.05, grain: 0.006, iris: 0.025 },
 };
 export const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);

@@ -16,7 +16,7 @@ so they never need repeating.
 - Background music is allowed now (owner changed this): two tracks (old audio2 leads) in
   `public/audio/`, switched from `effects/MusicSwitch.jsx`, a pill fixed top-right
   (mounted in `App.jsx` after the loader; the loader itself stays silent). It
-  autoplays when the browser allows it, else on first interaction.
+  autoplays unmuted when the browser allows it, else on first interaction (never starts muted).
 - **The loading screen is final. Never change it** (`src/pages/LoadingPage.jsx`,
   the `.grain` CSS, its timing, look, caption or logo flight). The owner
   loves it as it is. Refactors elsewhere must not alter it either. If
@@ -192,7 +192,7 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
     TubesCursor): a raw-WebGL2 shader of silky grey-white folds under a still
     film grain. Keep the grain static (re-rolling it per frame read as
     flicker) and faint (strong static grain read as dirt on the screen):
-    triangular dither, amplitude 0.035 light / 0.012 dark, after iamkailash.xyz but grey instead of blue. Both silks carry a faint pastel thin-film sheen
+    triangular dither, amplitude 0.012 light / 0.006 dark (owner asked for a clearer background; was 0.035 / 0.012), after iamkailash.xyz but grey instead of blue. Both silks carry a faint pastel thin-film sheen
     (pink/cyan/lime, hue only, `iris` in `TONES`: 0.1 light, 0.025 dark, so
     it reaches every page). Owner's call: "a few tints, not too much", then
     toned down again, the dark one twice; keep it faint. The folds drift

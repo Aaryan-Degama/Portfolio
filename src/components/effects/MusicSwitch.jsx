@@ -10,25 +10,33 @@ const Speaker = ({ muted }) => (
   </svg>
 );
 
-// Top-right player: switch between the two tracks, mute, volume. Same iOS
-// liquid-glass lens as the nav capsule (.liquid-glass in index.css). Browsers
-// block autoplay, so it tries on mount and falls back to the first
-// interaction. Clicking the active track pauses/resumes it. The label is dark
+// Top-right player: switch between the two tracks, mute (fixed 50% volume). Same iOS
+// liquid-glass lens as the nav capsule (.liquid-glass in index.css). Autoplays on mount
+// (unmuted; if the browser refuses, it starts on the first interaction). Clicking the active track pauses/resumes it. The label is dark
 // over the light hero and light everywhere else.
 export default function MusicSwitch() {
   const audio = useRef(null);
+  const box = useRef(null);
   const [track, setTrack] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [volume, setVolume] = useState(0.5);
   const [onHero, setOnHero] = useState(false);
 
   useEffect(() => {
     const a = audio.current;
-    const start = () => a.play().catch(() => {});
-    start();
-    window.addEventListener("pointerdown", start, { once: true });
-    window.addEventListener("keydown", start, { once: true });
+    a.volume = 0.5;
+    // Browsers block sound until the visitor interacts, so if autoplay is
+    // refused, start on the first click/key (a click on the player itself is
+    // left to its own buttons). Always unmuted.
+    const start = (e) => {
+      if (box.current.contains(e.target)) return;
+      window.removeEventListener("pointerdown", start);
+      window.removeEventListener("keydown", start);
+      a.play().catch(() => {});
+    };
+    a.play().catch(() => {});
+    window.addEventListener("pointerdown", start);
+    window.addEventListener("keydown", start);
     const hero = document.getElementById("hero");
     const io = hero && new IntersectionObserver(([e]) => setOnHero(e.intersectionRatio > 0.15), { threshold: [0.15] });
     io?.observe(hero);
@@ -41,9 +49,8 @@ export default function MusicSwitch() {
   }, []);
 
   useEffect(() => {
-    audio.current.volume = volume;
     audio.current.muted = muted;
-  }, [volume, muted]);
+  }, [muted]);
 
   const pick = (i) => {
     const a = audio.current;
@@ -55,6 +62,7 @@ export default function MusicSwitch() {
 
   return (
     <div
+      ref={box}
       className={`liquid-glass fixed right-4 top-4 z-50 flex items-center gap-1 rounded-full p-1 font-code text-[11px] uppercase transition-colors ${
         onHero ? "text-void" : "text-snow"
       }`}
@@ -77,21 +85,8 @@ export default function MusicSwitch() {
         aria-pressed={muted}
         className="rounded-full p-1.5 transition-colors hover:bg-white/20"
       >
-        <Speaker muted={muted || volume === 0} />
+        <Speaker muted={muted} />
       </button>
-      <input
-        type="range"
-        min="0"
-        max="1"
-        step="0.05"
-        value={muted ? 0 : volume}
-        onChange={(e) => {
-          setVolume(+e.target.value);
-          setMuted(false);
-        }}
-        aria-label="Volume"
-        className="mr-2 h-1 w-16 cursor-pointer accent-current"
-      />
     </div>
   );
 }
