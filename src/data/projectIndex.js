@@ -58,7 +58,7 @@ export const projects = [
     name: "Slate",
     category: "shipped-systems",
     neon: NEON.ember,
-    kind: "Hackathon project, team of three",
+    kind: "Hackathon project, with Kavyan Hembrom and Jalendu Pandey",
     summary:
       "The real timetable of 1,801 IIIT Allahabad students on serverless AWS, with class changes guarded by a Cedar policy.",
     stack: ["AWS Amplify", "Lambda", "DynamoDB", "Cedar"],

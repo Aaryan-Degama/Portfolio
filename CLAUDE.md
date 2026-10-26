@@ -58,7 +58,7 @@ repo/live links). Detail pages: `src/pages/projects/<Name>.jsx`.
 |---|---|---|---|
 | Vanta (with Divy Vaghasiya) | Information Retrieval | magenta | Aaryan-Degama/Vanta |
 | LilCV | Low-Level Systems | cyan | Aaryan-Degama/LilCV |
-| Slate (hackathon, team of 3) | Shipped Systems | ember | Aaryan-Degama/slate, live: main.dosqfo1xoqa7l.amplifyapp.com |
+| Slate (hackathon, with Kavyan Hembrom and Jalendu Pandey: credit both) | Shipped Systems | ember | Aaryan-Degama/slate, live: main.dosqfo1xoqa7l.amplifyapp.com |
 | Dhool (WeMakeDevs × AWS Environmental Hacks, built solo) | Shipped Systems | lime | Aaryan-Degama/Dhool_aws, live: main.d18fp2anb76xgh.amplifyapp.com |
 | TieTrace (FalkorDB Graph Hacks, with Abdul Azeem: always credit him) | Information Retrieval | violet | Aaryan-Degama/TieTrace |
 

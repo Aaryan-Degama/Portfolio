@@ -452,7 +452,8 @@ export default function Slate() {
             a server instead of a group chat. We set out to build a scheduling
             tool for professors and shipped a change log for class
             representatives. The gap between those is four days, 112 commits,
-            and three pivots, each one forced by a spreadsheet.
+            and three pivots, each one forced by a spreadsheet. Built by Aaryan
+            Degama, Kavyan Hembrom and Jalendu Pandey.
           </p>
         </Section>
 
