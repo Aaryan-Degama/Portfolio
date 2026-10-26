@@ -3,7 +3,7 @@
 Personal portfolio. A deliberate **clone of
 [kavyan256/portfolio-kavyan](https://github.com/kavyan256/portfolio-kavyan)**
 (layout, effects, neon design language), with Aaryan's name, content and
-projects, two-track background music (owner added), and an **itssharl.ee-style loader**. When in doubt
+projects, three-track background music (owner added), and an **itssharl.ee-style loader**. When in doubt
 about how something should look or behave, match the reference repo.
 
 **Maintain this file.** Whenever a decision, convention, route, project or
@@ -13,7 +13,7 @@ so they never need repeating.
 
 ## Owner rules (do not break)
 
-- Background music is allowed now (owner changed this): two tracks (old audio2 leads) in
+- Background music is allowed now (owner changed this): three tracks (audio3 leads and autoplays, then audio2, then audio1) in
   `public/audio/`, switched from `effects/MusicSwitch.jsx`, a pill fixed top-right
   (mounted in `App.jsx` after the loader; the loader itself stays silent). It
   autoplays unmuted when the browser allows it, else on first interaction (never starts muted).

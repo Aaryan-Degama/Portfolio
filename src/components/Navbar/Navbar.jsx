@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import NavItem from "./NavItem";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 const navItems = [
   { name: "Home", href: "#hero" },
   { name: "About", href: "#about" },
-  { name: "Projects", href: "#projects" },
+  { name: "Projects", href: "#projects", offset: 120 },
   { name: "Contact", href: "#contact" },
 ];
 
@@ -133,6 +136,15 @@ export default function Navbar({ scrollerRef }) {
               lit={i === target}
               dark={dark}
               current={i === active}
+              onClick={(e) => {
+                e.preventDefault();
+                const scroller = scrollerRef.current;
+                const to = document.querySelector(item.href);
+                // The scroller is the homepage's own element, not window, so
+                // the browser's anchor jump can't be eased; tween it instead.
+                const y = to.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - (item.offset ?? 0); // keeps the heading clear of the nav
+                gsap.to(scroller, { scrollTo: { y, autoKill: true }, duration: REDUCED ? 0 : 1.1, ease: "power3.inOut", overwrite: true });
+              }}
               onEnter={() => setHovered(i)}
               onBlur={() => setHovered(null)}
             />

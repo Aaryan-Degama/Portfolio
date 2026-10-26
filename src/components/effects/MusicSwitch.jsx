@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-// Old audio2 now leads; the first track is the one that autoplays.
-const SONGS = ["/audio/song2.mp3", "/audio/song1.mp3"];
+// Audio3 leads, then audio2, then audio1; the first track is the one that autoplays.
+const SONGS = ["/audio/song3.mp3", "/audio/song2.mp3", "/audio/song1.mp3"];
 
 const Speaker = ({ muted }) => (
   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -10,7 +10,7 @@ const Speaker = ({ muted }) => (
   </svg>
 );
 
-// Top-right player: switch between the two tracks, mute (fixed 50% volume). Same iOS
+// Top-right player: switch between the three tracks, mute (fixed 50% volume). Same iOS
 // liquid-glass lens as the nav capsule (.liquid-glass in index.css). Autoplays on mount
 // (unmuted; if the browser refuses, it starts on the first interaction). Clicking the active track pauses/resumes it. The label is dark
 // over the light hero and light everywhere else.
@@ -66,7 +66,7 @@ export default function MusicSwitch() {
       }`}
     >
       <audio ref={audio} src={SONGS[0]} loop onPlay={() => { setPlaying(true); setBlocked(false); }} onPause={() => setPlaying(false)} />
-      {blocked && !playing && <span className="animate-pulse pl-3">Click anywhere for music</span>}
+      {blocked && !playing && <span className="hidden animate-pulse pl-3 sm:inline">Click anywhere for music</span>}
       {SONGS.map((_, i) => (
         <button
           key={i}
