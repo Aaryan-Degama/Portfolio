@@ -25,6 +25,9 @@ so they never need repeating.
   the foot).
 - Everything else stays a faithful clone of the reference, re-skinned
   with Aaryan's content. Don't restyle it into something else.
+- The Contact section's Resume link opens the owner's Google Drive copy
+  (`https://drive.google.com/file/d/1c1PFChIRiHVIfum15LDA-sT76bA5TpEa/view?usp=sharing`),
+  not `/resume.pdf`. Update the Drive file, not the link, when the resume changes.
 - Real content only: facts come from the project READMEs and the resume
   (`resume/Aaryan_Degama.pdf`, also served as `public/resume.pdf`; replaced with the updated resume `Degama_Aaryan_Jitendrakumar.pdf`: adds Cloud/TypeScript skills, Sarvam AI sprint top 5, English fluent). Never
   invent metrics.

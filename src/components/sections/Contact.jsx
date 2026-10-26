@@ -64,7 +64,7 @@ export default function Contact() {
           <div className="flex flex-col gap-2">
             <span className="text-ash">Resume</span>
             <a
-              href="/resume.pdf"
+              href="https://drive.google.com/file/d/1c1PFChIRiHVIfum15LDA-sT76bA5TpEa/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className={LINK}
