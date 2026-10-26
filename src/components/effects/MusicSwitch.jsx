@@ -17,6 +17,7 @@ const Speaker = ({ muted }) => (
 export default function MusicSwitch() {
   const audio = useRef(null);
   const box = useRef(null);
+  const [blocked, setBlocked] = useState(false);
   const [track, setTrack] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -28,21 +29,18 @@ export default function MusicSwitch() {
     // Browsers block sound until the visitor interacts, so if autoplay is
     // refused, start on the first click/key (a click on the player itself is
     // left to its own buttons). Always unmuted.
+    const EVENTS = ["pointerdown", "pointerup", "mousedown", "touchend", "click", "keydown"];
     const start = (e) => {
       if (box.current.contains(e.target)) return;
-      window.removeEventListener("pointerdown", start);
-      window.removeEventListener("keydown", start);
-      a.play().catch(() => {});
+      a.play().then(() => EVENTS.forEach((t) => window.removeEventListener(t, start))).catch(() => {});
     };
-    a.play().catch(() => {});
-    window.addEventListener("pointerdown", start);
-    window.addEventListener("keydown", start);
+    a.play().catch(() => setBlocked(true));
+    EVENTS.forEach((t) => window.addEventListener(t, start));
     const hero = document.getElementById("hero");
     const io = hero && new IntersectionObserver(([e]) => setOnHero(e.intersectionRatio > 0.15), { threshold: [0.15] });
     io?.observe(hero);
     return () => {
-      window.removeEventListener("pointerdown", start);
-      window.removeEventListener("keydown", start);
+      EVENTS.forEach((t) => window.removeEventListener(t, start));
       io?.disconnect();
       a.pause();
     };
@@ -67,7 +65,8 @@ export default function MusicSwitch() {
         onHero ? "text-void" : "text-snow"
       }`}
     >
-      <audio ref={audio} src={SONGS[0]} loop onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} />
+      <audio ref={audio} src={SONGS[0]} loop onPlay={() => { setPlaying(true); setBlocked(false); }} onPause={() => setPlaying(false)} />
+      {blocked && !playing && <span className="animate-pulse pl-3">Click anywhere for music</span>}
       {SONGS.map((_, i) => (
         <button
           key={i}
