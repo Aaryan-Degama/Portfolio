@@ -1,88 +1,56 @@
-// WhiteFireTailCursor.jsx
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const TRAIL_COUNT = 12;
 const BASE_SIZE = 16;
 const DECAY = 0.85;
 const LERP_MAIN = 0.6;
 const LERP_TAIL = 0.5;
-const MAX_SEGMENT_DISTANCE = 5; // 🔥 prevents tail separation at high speed
+const MAX_SEGMENT_DISTANCE = 5; // prevents tail separation at high speed
+const SPEED_THRESHOLD = 0.5; // lower = more sensitive stop detection
 
+// Cursor dot with a fire tail. Positions are written straight to the DOM
+// (transform, no layout, no React state) and the loop sleeps once the tail has
+// caught up, so an idle page costs nothing.
 export default function WhiteFireTailCursor() {
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const [trail, setTrail] = useState(
-    () => Array.from({ length: TRAIL_COUNT }, () => ({ x: -100, y: -100 }))
-  );
+  const dots = useRef([]); // [0] main cursor, [1..] tail
 
-  const targetRef = useRef({ x: -100, y: -100 });
-  const cursorRef = useRef({ x: -100, y: -100 });
-  const trailRef = useRef(
-    Array.from({ length: TRAIL_COUNT }, () => ({ x: -100, y: -100 }))
-  );
-
-  // ✅ Track mouse + hide native cursor
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      targetRef.current = { x: e.clientX, y: e.clientY };
-    };
+    const target = { x: -100, y: -100 };
+    const cursor = { x: -100, y: -100 };
+    const trail = Array.from({ length: TRAIL_COUNT }, () => ({ x: -100, y: -100 }));
+    let last = { ...target };
+    let raf = 0;
 
     const style = document.createElement("style");
     style.innerHTML = `* { cursor: none !important; }`;
     document.head.appendChild(style);
 
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      document.head.removeChild(style);
-      window.removeEventListener("mousemove", handleMouseMove);
+    const place = (el, p) => {
+      el.style.transform = `translate3d(${p.x}px,${p.y}px,0) translate(-50%,-50%)`;
     };
-  }, []);
-
-  // ✅ Fire-tail animation loop
-  useEffect(() => {
-    let rafId;
-
-    let lastTarget = { x: -100, y: -100 };
-
-    const SPEED_THRESHOLD = 0.5; // lower = more sensitive stop detection
 
     const animate = () => {
-      const target = targetRef.current;
-      const cursor = cursorRef.current;
-      const trailPositions = trailRef.current.slice();
+      const speed = Math.hypot(target.x - last.x, target.y - last.y);
+      last = { ...target };
 
-      // ✅ Detect motion speed
-      const speed = Math.hypot(
-        target.x - lastTarget.x,
-        target.y - lastTarget.y
-      );
-
-      lastTarget = { ...target };
-
-      // ✅ Smooth main cursor
       cursor.x += (target.x - cursor.x) * LERP_MAIN;
       cursor.y += (target.y - cursor.y) * LERP_MAIN;
 
       if (speed < SPEED_THRESHOLD) {
-        // ✅ If nearly stopped → instantly collapse tail into cursor
-        for (let i = 0; i < TRAIL_COUNT; i++) {
-          trailPositions[i].x += (cursor.x - trailPositions[i].x) * 0.17;
-          trailPositions[i].y += (cursor.y - trailPositions[i].y) * 0.17;
+        // Nearly stopped: collapse the tail into the cursor.
+        for (const t of trail) {
+          t.x += (cursor.x - t.x) * 0.17;
+          t.y += (cursor.y - t.y) * 0.17;
         }
       } else {
-        // ✅ Normal fire-tail behavior while moving
-
-        trailPositions[0].x += (cursor.x - trailPositions[0].x) * LERP_TAIL;
-        trailPositions[0].y += (cursor.y - trailPositions[0].y) * LERP_TAIL;
-
+        trail[0].x += (cursor.x - trail[0].x) * LERP_TAIL;
+        trail[0].y += (cursor.y - trail[0].y) * LERP_TAIL;
         for (let i = 1; i < TRAIL_COUNT; i++) {
-          const prev = trailPositions[i - 1];
-          const curr = trailPositions[i];
-
-          let dx = prev.x - curr.x;
-          let dy = prev.y - curr.y;
+          const prev = trail[i - 1];
+          const curr = trail[i];
+          const dx = prev.x - curr.x;
+          const dy = prev.y - curr.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-
           if (dist > MAX_SEGMENT_DISTANCE) {
             const ratio = MAX_SEGMENT_DISTANCE / dist;
             curr.x = prev.x - dx * ratio;
@@ -94,52 +62,49 @@ export default function WhiteFireTailCursor() {
         }
       }
 
-      cursorRef.current = cursor;
-      trailRef.current = trailPositions;
+      place(dots.current[0], cursor);
+      trail.forEach((p, i) => place(dots.current[i + 1], p));
 
-      setCursorPos({ x: cursor.x, y: cursor.y });
-      setTrail(trailPositions.map((p) => ({ ...p })));
-
-      rafId = requestAnimationFrame(animate);
+      const settled =
+        Math.abs(target.x - cursor.x) < 0.05 &&
+        Math.abs(target.y - cursor.y) < 0.05 &&
+        trail.every((t) => Math.abs(t.x - cursor.x) < 0.05 && Math.abs(t.y - cursor.y) < 0.05);
+      raf = settled ? 0 : requestAnimationFrame(animate);
     };
 
-    animate();
-    return () => cancelAnimationFrame(rafId);
+    const onMove = (e) => {
+      target.x = e.clientX;
+      target.y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(animate);
+    };
+    window.addEventListener("mousemove", onMove);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      document.head.removeChild(style);
+      window.removeEventListener("mousemove", onMove);
+    };
   }, []);
 
   return (
-    <>
-      <div className="mix-blend-difference z-[9998] pointer-events-none fixed inset-0">
-        {/* Main cursor */}
-        <div
-          className="pointer-events-none fixed z-[9999] rounded-full bg-white -translate-x-1/2 -translate-y-1/2"
-          style={{
-            width: BASE_SIZE,
-            height: BASE_SIZE,
-            left: cursorPos.x,
-            top: cursorPos.y,
-          }}
-        />
-
-        {/* ✅ FIRE TAIL WITH CUT-OUT UNDER CURSOR */}
-        {trail.map((point, i) => {
-          const size = BASE_SIZE * Math.pow(DECAY, i + 1);
-
-          return (
-            <div
-              key={i}
-              className="fixed -translate-x-1/2 -translate-y-1/2 bg-white rounded-full pointer-events-none"
-              style={{
-                width: size,
-                height: size,
-                left: point.x,
-                top: point.y,
-                opacity: 1 - i / TRAIL_COUNT,
-              }}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div className="mix-blend-difference z-[9998] pointer-events-none fixed inset-0">
+      {/* Main cursor */}
+      <div
+        ref={(el) => (dots.current[0] = el)}
+        className="pointer-events-none fixed left-0 top-0 z-[9999] rounded-full bg-white will-change-transform"
+        style={{ width: BASE_SIZE, height: BASE_SIZE, transform: "translate(-100px,-100px)" }}
+      />
+      {Array.from({ length: TRAIL_COUNT }, (_, i) => {
+        const size = BASE_SIZE * Math.pow(DECAY, i + 1);
+        return (
+          <div
+            key={i}
+            ref={(el) => (dots.current[i + 1] = el)}
+            className="fixed left-0 top-0 bg-white rounded-full pointer-events-none will-change-transform"
+            style={{ width: size, height: size, opacity: 1 - i / TRAIL_COUNT, transform: "translate(-100px,-100px)" }}
+          />
+        );
+      })}
+    </div>
   );
 }

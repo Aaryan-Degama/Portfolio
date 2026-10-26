@@ -1,0 +1,97 @@
+import { useEffect, useRef, useState } from "react";
+
+// Old audio2 now leads; the first track is the one that autoplays.
+const SONGS = ["/audio/song2.mp3", "/audio/song1.mp3"];
+
+const Speaker = ({ muted }) => (
+  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" />
+    {muted ? <path d="m16 9 5 6m0-6-5 6" /> : <path d="M16 9a4 4 0 0 1 0 6m2.5-9a8 8 0 0 1 0 12" />}
+  </svg>
+);
+
+// Top-right player: switch between the two tracks, mute, volume. Same iOS
+// liquid-glass lens as the nav capsule (.liquid-glass in index.css). Browsers
+// block autoplay, so it tries on mount and falls back to the first
+// interaction. Clicking the active track pauses/resumes it. The label is dark
+// over the light hero and light everywhere else.
+export default function MusicSwitch() {
+  const audio = useRef(null);
+  const [track, setTrack] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [volume, setVolume] = useState(0.5);
+  const [onHero, setOnHero] = useState(false);
+
+  useEffect(() => {
+    const a = audio.current;
+    const start = () => a.play().catch(() => {});
+    start();
+    window.addEventListener("pointerdown", start, { once: true });
+    window.addEventListener("keydown", start, { once: true });
+    const hero = document.getElementById("hero");
+    const io = hero && new IntersectionObserver(([e]) => setOnHero(e.intersectionRatio > 0.15), { threshold: [0.15] });
+    io?.observe(hero);
+    return () => {
+      window.removeEventListener("pointerdown", start);
+      window.removeEventListener("keydown", start);
+      io?.disconnect();
+      a.pause();
+    };
+  }, []);
+
+  useEffect(() => {
+    audio.current.volume = volume;
+    audio.current.muted = muted;
+  }, [volume, muted]);
+
+  const pick = (i) => {
+    const a = audio.current;
+    if (i === track) return a.paused ? a.play() : a.pause();
+    setTrack(i);
+    a.src = SONGS[i];
+    a.play().catch(() => {});
+  };
+
+  return (
+    <div
+      className={`liquid-glass fixed right-4 top-4 z-50 flex items-center gap-1 rounded-full p-1 font-code text-[11px] uppercase transition-colors ${
+        onHero ? "text-void" : "text-snow"
+      }`}
+    >
+      <audio ref={audio} src={SONGS[0]} loop onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} />
+      {SONGS.map((_, i) => (
+        <button
+          key={i}
+          onClick={() => pick(i)}
+          aria-label={`Song ${i + 1}${i === track && playing ? " (pause)" : ""}`}
+          aria-pressed={i === track && playing}
+          className={`rounded-full px-3 py-1 transition-colors ${i === track ? "bg-white/35 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.5)]" : "hover:bg-white/20"}`}
+        >
+          {i === track && playing ? "II" : "▶"} {i + 1}
+        </button>
+      ))}
+      <button
+        onClick={() => setMuted((m) => !m)}
+        aria-label={muted ? "Unmute" : "Mute"}
+        aria-pressed={muted}
+        className="rounded-full p-1.5 transition-colors hover:bg-white/20"
+      >
+        <Speaker muted={muted || volume === 0} />
+      </button>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+        value={muted ? 0 : volume}
+        onChange={(e) => {
+          setVolume(+e.target.value);
+          setMuted(false);
+        }}
+        aria-label="Volume"
+        className="mr-2 h-1 w-16 cursor-pointer accent-current"
+      />
+    </div>
+  );
+}

@@ -74,9 +74,13 @@ export default function GrainGradient({ tone = "light", coveredBy }) {
     let pull = 0, pullTarget = 0;
     let raf = 0, visible = true;
     const start = performance.now();
+    // Old GPUs: the silk drifts slowly, so 30fps is enough, and if even that
+    // can't be held the canvas renders at a lower resolution (it is upscaled
+    // by CSS; the folds are soft, only the grain gets coarser).
+    let scale = 1, last = 0, slow = 0, samples = 0;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5) * scale;
       const w = Math.round(canvas.clientWidth * dpr);
       const h = Math.round(canvas.clientHeight * dpr);
       // Assigning width/height clears the canvas, even to the same value, which
@@ -96,12 +100,24 @@ export default function GrainGradient({ tone = "light", coveredBy }) {
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
-    const frame = () => {
-      mouse.x += (target.x - mouse.x) * 0.045;
-      mouse.y += (target.y - mouse.y) * 0.045;
-      pull += (pullTarget - pull) * 0.03;
-      draw((performance.now() - start) / 1000);
+    const frame = (now) => {
       raf = visible ? requestAnimationFrame(frame) : 0;
+      const dt = now - last;
+      if (dt < 28) return; // 30fps cap
+      if (last && dt < 250) {
+        // Easing was tuned per 60fps frame; scale it by elapsed time.
+        const f = dt / 16.7;
+        mouse.x += (target.x - mouse.x) * (1 - Math.pow(1 - 0.045, f));
+        mouse.y += (target.y - mouse.y) * (1 - Math.pow(1 - 0.045, f));
+        pull += (pullTarget - pull) * (1 - Math.pow(1 - 0.03, f));
+        slow += dt > 45 ? 1 : 0;
+        if (++samples === 40) {
+          if (slow > 24 && scale > 0.5) { scale -= 0.25; resize(); }
+          slow = samples = 0;
+        }
+      }
+      last = now;
+      draw((performance.now() - start) / 1000);
     };
 
     const onMove = (e) => {
@@ -122,7 +138,7 @@ export default function GrainGradient({ tone = "light", coveredBy }) {
       let onScreen = true, covered = false;
       const sync = () => {
         visible = onScreen && !covered;
-        if (visible && !raf) raf = requestAnimationFrame(frame);
+        if (visible && !raf) { last = 0; raf = requestAnimationFrame(frame); }
       };
       io = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); });
       io.observe(canvas);

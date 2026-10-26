@@ -3,7 +3,7 @@
 Personal portfolio. A deliberate **clone of
 [kavyan256/portfolio-kavyan](https://github.com/kavyan256/portfolio-kavyan)**
 (layout, effects, neon design language), with Aaryan's name, content and
-projects, **no music**, and an **itssharl.ee-style loader**. When in doubt
+projects, two-track background music (owner added), and an **itssharl.ee-style loader**. When in doubt
 about how something should look or behave, match the reference repo.
 
 **Maintain this file.** Whenever a decision, convention, route, project or
@@ -13,7 +13,10 @@ so they never need repeating.
 
 ## Owner rules (do not break)
 
-- No background music, no audio toggle, nothing that plays sound.
+- Background music is allowed now (owner changed this): two tracks (old audio2 leads) in
+  `public/audio/`, switched from `effects/MusicSwitch.jsx`, a pill fixed top-right
+  (mounted in `App.jsx` after the loader; the loader itself stays silent). It
+  autoplays when the browser allows it, else on first interaction.
 - **The loading screen is final. Never change it** (`src/pages/LoadingPage.jsx`,
   the `.grain` CSS, its timing, look, caption or logo flight). The owner
   loves it as it is. Refactors elsewhere must not alter it either. If
@@ -250,6 +253,11 @@ LoadingPage.jsx; that constant is the only loader line allowed to change.
 - Corners: `rounded-[2px]` on project pages, `rounded-[18px]` on homepage
   cards/tiles.
 - Listings are rows (`border-t border-paper/10`), not card grids.
+- Performance (old laptops lagged): `GrainGradient` caps at 30fps with
+  time-scaled easing and drops its render scale (down to 0.5) if frames stay
+  slow; `FollowCursor` writes transforms straight to the DOM and sleeps when
+  idle (no React state per frame). Keep new effects off per-frame setState and
+  off layout properties.
 - Motion: GSAP inside `gsap.context(..., ref)` with `ctx.revert()` on
   unmount; kill every ScrollTrigger on unmount. The homepage scrolls inside
   `.hide-scrollbar`, not `window`, so use IntersectionObserver there.

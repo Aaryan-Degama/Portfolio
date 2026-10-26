@@ -8,6 +8,7 @@ import Slate from "./pages/projects/Slate";
 import LilCV from "./pages/projects/LilCV";
 import Dhool from "./pages/projects/Dhool";
 import TieTrace from "./pages/projects/TieTrace";
+import MusicSwitch from "./components/effects/MusicSwitch";
 import FollowCursor from "./components/effects/FollowCursor";
 import { categories } from "./data/projectIndex";
 
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
 
+          {loaded && <MusicSwitch />}
           {isHomePage && loaded && <FollowCursor />}
         </div>
       )}
